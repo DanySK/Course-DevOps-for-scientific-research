@@ -1,0 +1,6 @@
+<<<<<<< HEAD
+Changes made on the branch that is being merged into. In most cases,
+this is the branch that I have currently checked out (i.e. HEAD).
+=======
+Changes made on the branch that is being merged in.
+>>>>>>> branchname
