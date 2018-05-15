@@ -801,11 +801,266 @@ Untracked files:
 
 \subsection{Public hosting for git repositories}
 
+\begin{frame}{Hosting repositories online}
+    \begin{itemize}
+        \item Fetch and push operations require direct network access between peers
+        \item The (current) Internet stucture is not P2P, though
+        \item A third, shared repository accessible to both could be the answer
+    \end{itemize}
+    \begin{block}{Current status}
+        \begin{itemize}
+            \item There are a number of competing services
+            \begin{itemize}
+                \item Github
+                \item Bitbucket
+                \item Gitlab
+            \end{itemize}
+            \item They all have free and paid plans
+            \item The idea is: attract the user, then make it pay when it can't live without the features
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Desiderata}
+    \begin{itemize}
+        \item Repository hosting
+        \item Access management
+        \item Privacy
+        \item Support for several network protocols
+        \item Support for teams
+        \item Web services
+        \begin{itemize}
+            \item Inspection of the code base
+            \item Inspection of the history
+            \item Issue tracking
+            \item Documentation handling
+            \item Release hosting
+            \item Forking (and related features)
+            \item ...
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{In this course}
+    \begin{block}{GitHub}
+        \begin{itemize}
+            \item De facto standard for hosting open source projects
+            \item Rich in services
+            \item Rich ecosystem of third-part services
+            \item Free for open source projects
+            \begin{itemize}
+                \item As such, not always suitable
+                \item (unless you got money, of course)
+            \end{itemize}
+            \item Great subsystem for documentation (Github pages)
+            \item One fork per project, no self-forking
+        \end{itemize}
+    \end{block}
+    \begin{block}{Bitbucket}
+        \begin{itemize}
+            \item Similar in features to Bitbucket
+            \item Poorer ecosystem of third-part services
+            \item Integrated continuous integrator (pipelines)
+            \begin{itemize}
+                \item Similar to Travis CI, but way less rich in features
+            \end{itemize}
+            \item Free for open and private projects
+            \begin{itemize}
+                \item With a limit on number of collaborators in private projects
+                \item Academic accounts for UniBo members!
+            \end{itemize}
+            \item Great for scientific papers!
+            \item Self-forking allowed
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\subsection{A transparent development process}
+
+\begin{frame}{Public issue tracker}
+    \begin{itemize}
+        \item Both Github and Bitbucket provide a public issue tracker
+        \item It can be used to track bugs, sure
+        \item It is also useful to track and \textbf{discuss} ideas
+        \item Opening the decision process fosters contribution
+        \item Big projects have a dedicated repository for discussions\footnote{e.g. \url{http://archive.is/WAhNe}}
+        \item Interesting proposals may generate very interesting discussions\footnote{e.g. \url{http://archive.is/5eiW8}}
+    \end{itemize}
+\end{frame}
+
+
+
 \section{A successful branching model}
 
-\section{Working with forks and pull requests}
+\subsection{with a shared repository}
 
+\begin{frame}[fragile]{Git Flow as a development model}
+	\begin{columns}
+		\begin{column}{.53\textwidth}
+			\begin{itemize}
+				\item Mainline branch: \texttt{master}
+				\begin{itemize}
+					\item Always alive
+				\end{itemize}
+				\item Development branch: \texttt{develop}
+				\begin{itemize}
+					\item Branches from \texttt{master}
+					\item Never merges
+				\end{itemize}
+				\item New feature: \texttt{feature-*}
+				\begin{itemize}
+					\item Branches from and merges to \texttt{develop}
+				\end{itemize}
+				\item New release: \texttt{release-*}
+				\begin{itemize}
+					\item Branches from \texttt{develop}
+					\item Merges to \texttt{master} and \texttt{develop}
+					\item Creates a new version
+				\end{itemize}
+				\item Fix a bug on mainline: \texttt{hotfix-*}
+				\begin{itemize}
+					\item Branches from \texttt{master}
+					\item Merges to \texttt{master} and \texttt{develop}
+					\item Creates a new version
+				\end{itemize}
+			\end{itemize}
+		\end{column}
+		\begin{column}{.47\textwidth}
+			\begin{center}
+				\includegraphics[width=\textwidth]{img/gitflow}
+			\end{center}
+		\end{column}
+	\end{columns}
+\end{frame}
 
+\begin{frame}[fragile]{Developing new features}
+	When a new feature must be added to the software, the team responsible for it should branch a \texttt{feature-myfeature} branch from \texttt{develop}.
+	\begin{itemize}
+		\item \texttt{git checkout -b feature-myfeature develop}
+	\end{itemize}
+	Once all the work has been done, the branch should get merged in \texttt{develop} and deleted. Even if fast-forward, the merge should be visible, to prevent history loss.
+	\begin{itemize}
+		\item \texttt{git checkout develop}
+		\item \texttt{git merge --no-ff feature-myfeature}
+		\item \texttt{git branch -d feature-myfeature}
+	\end{itemize}
+	In order to minimize the merging effort, it is a good practice to incorporate changes from \texttt{develop} from time to time (e.g. when another team completed another feature).
+\end{frame}
+
+\begin{frame}[fragile]{Releasing a new version}
+	When the status of the \texttt{develop} branch is (besides the very last bits) the status of the next production release, a \texttt{release-version} should branch from \texttt{develop}.
+	\begin{itemize}
+		\item \texttt{git checkout -b release-version develop}
+	\end{itemize}
+	In this branch, only things like version number changes or last minute bug fixes should get incorporated. Once done, we merge the \texttt{release-version} branch back into \texttt{develop}...
+	\begin{itemize}
+		\item \texttt{git checkout develop}
+		\item \texttt{git merge --no-ff release-version}
+	\end{itemize}
+	...and \texttt{master}. Plus, we tag master, so that we keep a reference to the exact repository status at release time. Then, we delete the \texttt{release-version} branch.
+	\begin{itemize}
+		\item \texttt{git checkout master}
+		\item \texttt{git merge --no-ff release-version}
+		\item \texttt{git tag -a version}
+		\item \texttt{git branch -d release-version}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Fix severe bugs affecting the mainline}
+	You spot a bug in your current production branch. The fix must be delivered immediately.
+	
+	Start a new \texttt{hotfix-version} branch:
+	\begin{itemize}
+		\item \texttt{git checkout -b hotfix-version master}
+	\end{itemize}
+	Change the version number, fix the bug (also add a regression test). Once done, repeat the procedure already seen for a normal release.
+	\begin{itemize}
+		\item \texttt{git checkout develop}
+		\item \texttt{git merge --no-ff hotfix-version}
+		\item \texttt{git checkout master}
+		\item \texttt{git merge --no-ff hotfix-version}
+		\item \texttt{git tag -a version}
+		\item \texttt{git branch -d hotfix-version}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{git flow}}
+	\begin{itemize}
+		\item This workflow, first suggested by Vincent Driessen, got very popular.
+		\item The command sequence is repetitive, and got automated
+		\item A git extension (not part of the git distribution) is available:
+		\begin{itemize}
+			\item Introduces the \texttt{git flow} subcommand
+			\item Starts and finishes feature, release, hotfix (and support)  branches
+			\item Under the hood, it calls exactly the commands listed previously
+		\end{itemize}
+		\item My suggestion 
+		\begin{itemize}
+			\item \textit{learn} git flow as a development model
+			\item Get acquainted with it using standard \texttt{git}
+			\item When you are very confident that you know what the tool is doing with your repository, use \texttt{git flow}
+			\item This is a good approach in general to new tools:
+			\begin{itemize}
+				\item understand the idea
+				\item learn the basics
+				\item understand what goes on under the hood
+				\item use the advanced features productively
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\subsection{with forks and pull requests}
+
+\begin{frame}{A higher degree of control}
+    It's not always a good idea to give writing permissions on your repository
+    \begin{itemize}
+        \item A student may push bad commits
+        \item A wrong push on the wrong branch could have bad effects
+        \item Your boss made a change but got tired of the push being refused and just uses \texttt{--force}
+        \item You want fine grained control on the code that is being pushed
+        \begin{itemize}
+            \item e.g. perform code review
+        \end{itemize}
+    \end{itemize}
+    How to enforce a higher degree of control, retaining the possibility to contribute?
+\end{frame}
+
+\begin{frame}{Forking}
+    \begin{block}{fork}
+        A hosted clone of a repository associated to a different user / team
+    \end{block}
+    \begin{itemize}
+        \item Both Bitbucket and GitHub allow it
+        \begin{itemize}
+            \item Bitbucket allows multiple forks of the same repo by the same user
+        \end{itemize}
+        \item Every developer (or team) has his own fork where to work
+        \item Makes changes freely
+        \item Once complete, asks the maintainer of the original fork to \textit{pull} from its repository
+        \begin{itemize}
+            \item The maintainer of the original repository can choose whether or not to pull
+            \item Possibly, provide a list of changes required for the pull to happen
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Working with pull requests}
+    \begin{block}{pull request}
+        An official request to incorporate changes from a branch of a fork to a branch of another fork.
+    \end{block}
+    \begin{itemize}
+        \item Both Bitbucket and GitHub support the process
+        \item A list of changes (commits) is pictured
+        \item The merge is tested, and in case of conflict the pull request is suspended and can't be merged
+        \begin{itemize}
+            \item It is up to the requestor to provide mergeable code and fix conflicts
+        \end{itemize}
+        \item Code review can be performed by asking a number of changes and tracking the evolution
+        \item Comments can be provided line by line
+        \item Once the pull request satisfies the requirements, it can be merged and becomes part of the original repository
+    \end{itemize}
+\end{frame}
 
 
 \section*{\refname}
