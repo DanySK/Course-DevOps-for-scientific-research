@@ -16,3 +16,6 @@
 .settings/
 .gradle/
 */*.pdf
+venv/
+*.egg-info/
+dist/
