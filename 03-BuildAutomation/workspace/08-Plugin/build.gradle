@@ -1,0 +1,12 @@
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "gradle.plugin.org.example.greeting:greeting-plugin-example:1.0"
+  }
+}
+
+apply plugin: "org.example.greeting" 

@@ -1,0 +1,13 @@
+task hello {
+    doLast {
+        println 'Hello world!'
+    }
+} 
+hello.doFirst {
+    10.times { print "${10 - it} " }
+    println()
+}
+hello.doLast {
+    10.times { print "$it " }
+    println()
+}

@@ -1,0 +1,8 @@
+task myTask {
+    ext.myProperty = "My Interesting property"
+}
+task printProperty {
+    doLast {
+        println myTask.myProperty
+    }
+}

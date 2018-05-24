@@ -1,0 +1,17 @@
+apply plugin: 'java'
+apply plugin: 'jacoco'
+apply plugin: 'checkstyle'
+apply plugin: 'build-dashboard'
+
+build.dependsOn(jacocoTestReport)
+build.dependsOn(buildDashboard)
+
+sourceCompatibility = "$jdkVersion"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation "junit:junit:$junitVersion"
+}

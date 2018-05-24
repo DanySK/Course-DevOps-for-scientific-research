@@ -1,0 +1,24 @@
+> Task :clean
+> Task :compileJava
+> Task :processResources NO-SOURCE
+> Task :classes
+> Task :compileTestJava
+> Task :processTestResources NO-SOURCE
+> Task :testClasses
+
+> Task :test FAILED
+
+TestPOJO > testHashCode FAILED
+    java.lang.AssertionError at TestPOJO.java:41
+
+TestPOJO > testEquals FAILED
+    java.lang.AssertionError at TestPOJO.java:34
+
+4 tests completed, 2 failed
+
+* What went wrong:
+Execution failed for task ':test'.
+> There were failing tests. See the report at: [...]/build/reports/tests/test/index.html
+
+BUILD FAILED in 0s
+4 actionable tasks: 4 executed

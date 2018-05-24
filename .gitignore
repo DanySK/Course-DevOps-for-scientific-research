@@ -6,4 +6,13 @@
 *.gz
 *.vrb
 *.toc
+*.kate-swp
+*.bbl
+*.blg
 **/_minted*/
+**/build/
+**/.recommenders/
+**/.metadata/
+.settings/
+.gradle/
+*/*.pdf

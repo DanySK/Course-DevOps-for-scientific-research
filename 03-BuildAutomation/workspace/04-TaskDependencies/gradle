@@ -1,0 +1,12 @@
+
+> Task :prepare
+Preparing environment
+
+> Task :hello
+Hello world!
+
+> Task :complete
+Completed.
+
+BUILD SUCCESSFUL in 0s
+3 actionable tasks: 3 executed

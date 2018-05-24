@@ -1,0 +1,9 @@
+task task0 {
+    doLast { print '0 ' }
+}
+100.times { n ->
+    task "task${n+1}"(dependsOn: "task$n") {
+        doLast { print "${n + 1} " }
+    }
+}
+defaultTasks('task8', 'task13')

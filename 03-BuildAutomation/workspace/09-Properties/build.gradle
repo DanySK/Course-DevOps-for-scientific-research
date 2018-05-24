@@ -1,0 +1,6 @@
+task printProperties {
+    doLast {
+        println("I can access $propertyFromFile")
+        println("But also properties $propertyFromCLI.")
+    }
+}

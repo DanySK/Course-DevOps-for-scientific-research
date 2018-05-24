@@ -1,0 +1,12 @@
+
+> Task :subproject1:welcome
+subproject1 welcomes you
+
+> Task :subproject2:hello
+Hello from subproject2
+
+> Task :runAll
+Done.
+
+BUILD SUCCESSFUL in 0s
+3 actionable tasks: 3 executed

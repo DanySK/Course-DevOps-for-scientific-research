@@ -1,0 +1,10 @@
+task runAll {
+    doLast { println('Done.') }
+}
+// Evaluate sub-projects first
+subprojects.each { rootProject.evaluationDependsOn(it.path)}
+// Make runAll dependent on every subproject task
+subprojects { sub -> 
+    sub.tasks.each { runAll.dependsOn(it) }
+}
+defaultTasks('runAll')

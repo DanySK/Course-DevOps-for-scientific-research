@@ -1,0 +1,12 @@
+apply plugin: 'java'
+
+sourceCompatibility = "$jdkVersion"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "commons-io:commons-io:$commonsIoVersion"
+    implementation "com.omertron:thetvdbapi:$tvDbApiVersion"
+}

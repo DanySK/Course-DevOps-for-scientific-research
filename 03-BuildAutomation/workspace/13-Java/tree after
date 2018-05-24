@@ -1,0 +1,19 @@
+.
+├── build
+│   ├── classes
+│   │   └── java
+│   │       └── main
+│   │           └── HelloWorld.class
+│   ├── libs
+│   │   └── 13-Java.jar
+│   └── tmp
+│       ├── compileJava
+│       └── jar
+│           └── MANIFEST.MF
+├── build.gradle
+└── src
+    └── main
+        └── java
+            └── HelloWorld.java
+
+11 directories, 6 files

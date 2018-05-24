@@ -1,0 +1,8 @@
+Download https://plugins.gradle.org/m2/gradle/plugin/org/example/greeting/greeting-plugin-example/1.0/greeting-plugin-example-1.0.pom
+Download https://plugins.gradle.org/m2/gradle/plugin/org/example/greeting/greeting-plugin-example/1.0/greeting-plugin-example-1.0.jar
+
+> Task :hello
+Hello, World!
+
+BUILD SUCCESSFUL in 0s
+1 actionable task: 1 executed
