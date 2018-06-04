@@ -1,0 +1,24 @@
+> Task :clean
+> Task :compileKotlin
+> Task :compileJava
+> Task :compileGroovy
+
+> Task :compileScala
+Pruning sources from previous analysis, due to incompatible CompileSetup.
+
+> Task :processResources NO-SOURCE
+> Task :classes
+> Task :jar
+> Task :assemble
+> Task :compileTestKotlin NO-SOURCE
+> Task :compileTestJava NO-SOURCE
+> Task :compileTestGroovy NO-SOURCE
+> Task :compileTestScala NO-SOURCE
+> Task :processTestResources NO-SOURCE
+> Task :testClasses UP-TO-DATE
+> Task :test NO-SOURCE
+> Task :check UP-TO-DATE
+> Task :build
+
+BUILD SUCCESSFUL in 3s
+6 actionable tasks: 6 executed

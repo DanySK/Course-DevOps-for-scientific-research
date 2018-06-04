@@ -73,6 +73,8 @@ Danilo Pianini\\
 \newcommand{\groovy}[3]{\codefile{#1}{#2}{#3}{groovy}}
 \newcommand{\kotlin}[3]{\codefile{#1}{#2}{#3}{kotlin}}
 \newcommand{\scala}[3]{\codefile{#1}{#2}{#3}{scala}}
+\newcommand{\python}[3]{\codefile{#1}{#2}{#3}{python}}
+\newcommand{\markdown}[3]{\codefile{#1}{#2}{#3}{markdown}}
 \newcommand{\terminal}[3]{\codefile{#1}{#2}{#3}{text}}
 
 \newcommand{\tinier}{\fontsize{4pt}{5pt}\selectfont}
@@ -1399,38 +1401,70 @@ apply plugin: 'google-test'
     \begin{itemize}
         \item A maven plugin is distributed with the tool
         \item It provides a factory for pom files
-        \item It provides an uploadArchives task for preparing a Maven-compatible distribution
+        \item It provides an \texttt{uploadArchives} task for preparing a Maven-compatible distribution
         \begin{itemize}
             \item Including a valid POM descriptor
         \end{itemize}
-    \groovy{23-POM}{gradle.properties}{\scriptsize}
-    \groovy{23-POM}{settings.gradle}{\normalsize}
-    \groovy{23-POM}{build.gradle}{\tinier}
     \end{itemize}
+    \groovy{23-POM}{gradle.properties}{\scriptsize}
+    \groovy{23-POM}{build.gradle}{\tinier}
 \end{frame}
 
 \begin{frame}[fragile, allowframebreaks]{Generating a ``fat jar'' in Gradle}
     A fat jar:
     \begin{itemize}
         \item Includes all the libraries required \textit{at runtime}
-        \item It provides a factory for pom files
-        \item It provides an uploadArchives task for preparing a Maven-compatible distribution
+        \item Is executable
         \begin{itemize}
-            \item Including a valid POM descriptor
+            \item i.e. has a MANIFEST.MF file indicating the class to execute
         \end{itemize}
-    \groovy{23-POM}{gradle.properties}{\scriptsize}
-    \groovy{23-POM}{settings.gradle}{\normalsize}
-    \groovy{23-POM}{build.gradle}{\tinier}
     \end{itemize}
+    No default task is provided, we need to write one manually extending the existing \texttt{jar}
+    \groovy{24-Fatjar}{gradle.properties}{\scriptsize}
+    \groovy{24-Fatjar}{build.gradle}{\tinier}
 \end{frame}
 
-Generating fat jars
+\begin{frame}[fragile, allowframebreaks]{DVCS-Sensible build}
+    You may want the build system to automatically detect the project version from the DVCS and act accordingly
+    \begin{itemize}
+        \item e.g. if it is tagged and sits on main, it is a release
+        \item Otherwise, it is a beta, and we may want to identify it
+        \item No direct support in Gradle 
+        \begin{itemize}
+            \item But you can use a full fledged programming language as Groovy...
+            \item And there exist a GrGit library for interacting with git!
+        \end{itemize}
+    \end{itemize}
+    \groovy{26-Git}{settings.gradle}{\scriptsize}
+    \groovy{26-Git}{gradle.properties}{\scriptsize}
+    \groovy{26-Git}{build.gradle}{\tiny}
+\end{frame}
 
-Generating Ivy metadata (pom.xml)
-
-\begin{frame}[fragile]{Packaging with Python setuptools}
-% https://github.com/simoninireland/simplicial/blob/master/setup.py.in
-% https://packaging.python.org/tutorials/packaging-projects/
+\begin{frame}[fragile,allowframebreaks]{Packaging with Python setuptools}
+    Python provides setuptools for easily packaging your software
+    \begin{enumerate}
+        \item Create your project. In this case, We create just an empty package:
+        \python{25-setuptools}{my\string_pkg/\string_\string_init\string_\string_.py}{\normalsize}
+        \item Create a valid \texttt{README.md} (GitHub flavored Markdown syntax is supported!)
+        \terminal{25-setuptools}{README.md}{\scriptsize}
+        \item Create a \texttt{LICENSE} file
+        \terminal{25-setuptools}{LICENSE}{\scriptsize}
+        \item Create a \texttt{setup.py} file, along the line of:
+        \python{25-setuptools}{setup.py}{\tiny}
+        \item Create a virtual environment, by issuing: \\
+        \texttt{python -m venv venv}
+        \item Activate the virtual environment: \\
+        \texttt{source venv/bin/activate}
+        \item Upgrade pip: \\
+        \texttt{pip install pip --upgrade}
+        \item Install setuptools and wheel: \\
+        \texttt{pip install --upgrade setuptools wheel}
+        \item Generate the package! \\
+        \texttt{python setup.py sdist bdist\string_wheel}
+        \item Deactivate the virtual environment! \\
+        \texttt{deactivate}
+        \item Packages will be available in the \texttt{dist} folder
+    \end{enumerate}
 \end{frame}
 
 \section*{\refname}
