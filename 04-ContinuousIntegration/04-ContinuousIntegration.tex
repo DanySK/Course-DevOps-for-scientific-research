@@ -1,0 +1,666 @@
+\documentclass[presentation]{beamer}
+\usetheme{CambridgeUS}
+\usecolortheme{orchid}
+
+\definecolor{themeColor}{HTML}{1dc600}
+
+\setbeamercolor*{structure}{bg=black,fg=themeColor}
+
+\setbeamercolor*{palette primary}{use=structure,fg=white,bg=structure.fg}
+\setbeamercolor*{palette secondary}{use=structure,fg=white,bg=structure.fg!75}
+\setbeamercolor*{palette tertiary}{use=structure,fg=white,bg=structure.fg!50!black}
+\setbeamercolor*{palette quaternary}{fg=white,bg=black}
+
+\setbeamercolor{section in toc}{fg=black,bg=white}
+\setbeamercolor{alerted text}{use=structure,fg=structure.fg!50!black!80!black}
+
+\setbeamercolor{titlelike}{parent=palette primary,fg=structure.fg!50!black}
+\setbeamercolor{frametitle}{bg=structure.fg!10!white,fg=structure.fg!50!black!80!black}
+
+\setbeamercolor*{titlelike}{parent=palette primary}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{multirow}
+\usepackage{hhline}
+\usepackage{amsfonts,amstext,amssymb,wasysym}
+\usepackage{fancyvrb}
+\usepackage{alltt}
+\usepackage{textcomp}
+\usepackage{url}
+\usepackage{multimedia,pgf}
+\usepackage{geometry}
+\usepackage{minted}
+\usepackage{bibentry}
+\usepackage{framed}
+\usepackage{cleveref}
+\nobibliography*
+
+\title[04 - Continuous Integration]{\small{Developing, maintaining, and sharing software tools for research} \\
+\normalsize{Continuous integration}}
+
+\author[D. Pianini]{
+Danilo Pianini\\
+\texttt{{\footnotesize danilo.pianini@unibo.it}}}
+
+
+\institute[UniBo]
+{\textsc{Alma Mater Studiorum}---Universit\`a di Bologna}
+
+\date[\today{}]{Ph.D. course in Data Science and Computation \\
+\scriptsize \today{} - Bologna (Italy)
+}
+
+\pgfdeclareimage[height=0.625cm]{university-logo}{images/logo}
+\logo{\pgfuseimage{university-logo}}
+
+\begin{document}
+
+\newcommand{\bashinline}[1]{\mintinline{bash}{#1}}
+
+\AtBeginSubsection[]{%
+  \begin{frame}<beamer>
+    \frametitle{Outline}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+  \addtocounter{framenumber}{-1}% If you don't want them to affect the slide number
+}
+
+%===============================================================================
+\frame[label=coverpage]{\titlepage}
+%===============================================================================
+
+%===============================================================================
+%===============================================================================
+\section*{Outline}
+%===============================================================================
+%===============================================================================
+
+\frame{\tableofcontents}
+
+%===============================================================================
+%===============================================================================
+
+\section{Introduction}
+\begin{frame}[fragile, allowframebreaks]{Why continuous?}
+	\begin{block}{Avoid the integration hell}
+		\begin{itemize}
+			\item Work in parallel
+			\item Don't waste developers' time with repetitive tasks
+			\item Don't break stuff
+		\end{itemize}
+		Time is money
+	\end{block}
+	\begin{itemize}
+		\item Software development used to take several months for ``integrating'' a couple of years of development \cite{fowlerci}
+		\item Historically introduced by the extreme programming (XP) community
+		\item Today used by companies that do not adopt XP
+		\item IMVU \cite{imvu} delivers its software up to 50 times \textbf{per day}
+		\item Google and Mozilla release \textbf{at least} once a day
+	\end{itemize}
+	\begin{block}{Higher frequency, lower risk \cite{semaphoreci}}
+		\includegraphics[width=.47\textwidth]{images/integration-traditional}
+		~ \vline ~
+		\includegraphics[width=.47\textwidth]{images/integration-continuous}
+	\end{block}
+\end{frame}
+
+\begin{frame}[fragile, allowframebreaks]{Improve over classic development}
+	\begin{block}{Protoduction \cite{jargon}}
+		\begin{center}
+			\includegraphics[width=.25\textwidth]{images/protoduction} \\
+			When prototype code ends up in production
+		\end{center}
+		\begin{itemize}
+			\item Classically used with a negative meaning
+			\item It's time to rehabilitate it
+		\end{itemize}
+		\textbf{Make it easy to access and use the latest prototype}
+	\end{block}
+	\begin{block}{It's compiling \cite{xkcd303}}
+		\centering
+		\includegraphics[width=.49\textwidth]{images/compiling}
+
+		\textbf{Make the building process fast!}
+	\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Continuous Integration software}
+	Software that promotes the practice of continuous integration
+	\begin{itemize}
+		\item Runs a build for every change in the project
+		\item Prepares fresh environments where the builds are hosted
+		\item Notifies the results, e.g. if a failure occurs
+		\item Provides tools for deploying the produced artifacts
+	\end{itemize}
+	Hosted CI with free plans for open source projects are blossoming:
+	\scriptsize
+	\begin{itemize}
+		\item Circle CI
+		\item Codefresh
+		\item Codeship
+		\item drone.io
+		\item Pipelines
+		\item Travis CI
+		\item Wercker
+		\item ...
+	\end{itemize}
+\end{frame}
+
+\section{Travis CI}
+
+\begin{frame}[fragile]{Travis CI}
+	\begin{itemize}
+		\item Web based
+		\item Well integrated with GitHub
+		\begin{itemize}
+			\item Build results are displayed in the repo without intervention
+			\item Automatic build of any pull request
+		\end{itemize}
+		\item Free for open source projects
+		\item Cronjobs
+		\item Build instances based on Docker
+		\item Project-local configuration via YAML (in the \texttt{.travis.yml} file)
+		\item Out of the box support for Gradle
+		\item Dozens of deployment targets
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{How it works}
+	\begin{itemize}
+		\item A web-hook can be registered to your GitHub repository that triggers Travis CI at each new commit
+		\item Travis CI starts a pristine appropriate environment
+		\begin{itemize}
+			\item Can be a container or a full virtual machine, depending on whether \texttt{sudo} is required \cite{travisbuild}
+		\end{itemize}
+		\item The project gets cloned
+		\item The configured commands are executed
+		\item The configured deployments are performed
+		\item If necessary, project managers are informed of the build status
+	\end{itemize}
+\end{frame}
+
+\section{Configuration}
+
+\subsection{Basics}
+
+\begin{frame}{\texttt{.travis.yml}}
+    \begin{itemize}
+        \item Travis uses a project-local configuration
+        \item A \texttt{.travis.yml} file \textit{must} be in your repository root
+        \begin{itemize}
+            \item of course, it must be tracked in git
+        \end{itemize}
+        \item It is a YAML file, very human-readable and easy to learn \footnote{\url{https://learnxinyminutes.com/docs/yaml/}} 
+        \begin{itemize}
+            \item Also it is a superset of JSON, so any valid JSON is a valid YAML
+        \end{itemize}
+        \item Supports basically any language that can get built on Linux or MacOS
+        \begin{itemize}
+            \item No support for Windows builds
+        \end{itemize}
+        \item Support for build matrix
+        \begin{itemize}
+            \item When your project can get built using different versions of different tools, you may want to test all of them
+            \item It's a cartesian product of configurations
+            \item Commit once, build on every supported environment
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{.travis.yml}: the \texttt{language} section}
+    \begin{itemize}
+        \item Travis provides a number of default environments for the most common languages
+        \begin{itemize}
+            \item They differ by software installed by default
+            \begin{itemize}
+                \item e.g. the C\# compiler is not included if you run a Python build)
+            \end{itemize}
+            \item They behave differently
+            \begin{itemize}
+                \item e.g. if Java is specified as language, the system automatically searches for a \textit{build.gradle}, a \texttt{pom.xml} (Maven), or an Ant build script
+            \end{itemize}
+        \end{itemize}
+        \item The first configuration required is a specification on which environment to work in
+        \begin{itemize}
+            \item Defaults to Ruby
+        \end{itemize}
+        \item For very simple projects, this might be enough of configuration
+    \end{itemize}
+    \begin{block}{Example}
+        \begin{minted}{yaml}
+language: python
+        \end{minted}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{.travis.yml}: custom behavior using the \texttt{script} section}
+    \begin{itemize}
+        \item The default configuration may be not suitable for you
+        \begin{itemize}
+            \item Either because you want to customize it
+            \item Or because you are using something that is not in the spectrum of supported features
+        \end{itemize}
+        \item Bash commands can be configured to be executed in place of the default behavior
+    \end{itemize}
+    \begin{block}{Example}
+        \begin{minted}[fontsize=\scriptsize]{yaml}
+language: java
+script:
+  - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash build.sh; fi'
+  - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then bash build_pull_req.sh; fi'
+        \end{minted}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{.travis.yml}: distribution selection in the \texttt{dist} section}
+    \begin{itemize}
+        \item By default, Travis CI builds in a Ubuntu Linux environment
+        \item Ubuntu LTS is generally used
+        \item The version of Ubuntu can be selected in a \texttt{dist} section
+        \begin{itemize}
+            \item At the time of writing, \texttt{trusty} and precise are \texttt{available}
+        \end{itemize}
+        \item Mac OS X can be used by specifying \texttt{os: osx} in place of \texttt{dist}
+    \end{itemize}
+    \begin{block}{Example}
+        \begin{minted}[fontsize=\scriptsize]{yaml}
+language: python
+dist: trusty
+script:
+  - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash build.sh; fi'
+  - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then bash build_pull_req.sh; fi'
+        \end{minted}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{.travis.yml}: enabling super user access}
+    \begin{itemize}
+        \item By default, Travis CI builds in a docker container
+        \begin{itemize}
+            \item It's way faster than a VM, especially in terms of start up time
+        \end{itemize}
+        \item Docker does not allow for super-user access though
+        \item Sometimes it is required
+        \begin{itemize}
+            \item e.g. for customizing the OS by installing packages
+        \end{itemize}
+        \item In such case, \texttt{sudo: required} switches the build to a full fledged VM with super user access
+    \end{itemize}
+    \begin{block}{Example}
+        \begin{minted}[fontsize=\scriptsize]{yaml}
+language: python
+dist: trusty
+sudo: required
+script:
+  - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash build.sh; fi'
+  - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then bash build_pull_req.sh; fi'
+        \end{minted}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{The build lifecycle in Travis}
+    \begin{enumerate}
+        \item Install --- Install any dependency required
+        \begin{enumerate}
+            \item \texttt{apt addons} --- Optional
+            \item \texttt{cache components} --- Optional
+            \item \texttt{before\_install} --- Install additional dependencies in form of Ubuntu packages using \texttt{apt}
+            \item \texttt{install}
+        \end{enumerate}
+        \item Script --- Run the build script
+        \begin{enumerate}
+            \item \texttt{before\_script} --- Preparation for the build
+            \item \texttt{script} --- Actual build
+            \item \texttt{before\_cache} --- Optional
+            \item \texttt{after\_success} or \texttt{after\_failure} --- Execute additional scripts depending on the outcome of the build
+            \item \texttt{before\_deploy} --- Optional, used to prepare resources to be uploaded
+            \item \texttt{deploy} --- Optional, used to actually deploy the produced artifacts
+            \item \texttt{after\_deploy} --- Optional, additional operations to be executed after deployment
+            \item \texttt{after\_script}
+        \end{enumerate}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{.travis.yml}: Example with several phases}
+    \begin{block}{Example}
+        \begin{minted}[fontsize=\scriptsize]{yaml}
+language: java
+dist: trusty
+sudo: required
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y graphviz
+before_install: echo Begin actual build
+script:
+  - ./gradlew clean build
+  - ./gradlew buildDashboard
+after_success: echo Build successful
+after failure: sudo mail -s "Build failure" admin@company.org < /dev/null
+before_deploy: echo Preparing for deploy
+after_deploy: echo Deployment phase concluded.
+        \end{minted}
+    \end{block}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Build variables}
+    Travis offers a number of environment variables that allow for fine tuning the build process.
+    \begin{block}{\texttt{CI}, \texttt{TRAVIS}, \texttt{CONTINUOUS\_INTEGRATION}, and \texttt{HAS\_JOSH\_K\_SEAL\_OF\_APPROVAL}\footnote{Josh K. is a co-founder of Travis CI: \url{https://twitter.com/j2h}}}
+        Always set to \texttt{true}. Used for detecting if the build is running on the Continuous integration environment
+    \end{block}
+    \begin{block}{\texttt{DEBIAN\_FRONTEND}}
+        Always set to \texttt{noninteractive}. Some scripts use it to determine whether or not ask for user input.
+    \end{block}
+    \begin{block}{\texttt{USER}}
+        Always set to \texttt{travis}. Do not depend on this value; do not override this value.
+    \end{block}
+    \begin{block}{\texttt{HOME}}
+        Always set to \texttt{/home/travis}. Do not depend on this value; do not override this value.
+    \end{block}
+    \begin{block}{\texttt{LANG} and \texttt{LC\_ALL}}
+        Always set to \texttt{en\_US.UTF-8}.
+    \end{block}
+    \begin{block}{\texttt{RAILS\_ENV}, \texttt{RACK\_ENV}, \texttt{MERB\_ENV}}
+        Always set to \texttt{test}
+    \end{block}
+    \begin{block}{\texttt{JRUBY\_OPTS}}
+         Always set to \texttt{"--server -Dcext.enabled=false -Xcompile.invokedynamic=false"}
+    \end{block}
+    \begin{block}{\texttt{JAVA\_HOME}}
+        Set to the appropriate value, depends on the selected JDK
+    \end{block}
+    \begin{block}{\texttt{TRAVIS\_ALLOW\_FAILURE}}
+        Set to \texttt{true} if the job is allowed to fail.
+        Set to \texttt{false} if the job is not allowed to fail.
+    \end{block}
+    \begin{block}{\texttt{TRAVIS\_BRANCH}}
+        For push builds, or builds not triggered by a pull request, this is the name of the branch.
+        For builds triggered by a pull request this is the name of the branch targeted by the pull request.
+        For builds triggered by a tag, this is the same as the name of the tag (\texttt{TRAVIS\_TAG}).
+        Note that for tags, git does not store the branch from which a commit was tagged.
+    \end{block}
+    \begin{block}{\texttt{TRAVIS\_BUILD\_DIR}}
+        The absolute path to the directory where the repository being built has been copied on the worker.
+    \end{block}
+    \begin{block}{\texttt{TRAVIS\_BUILD\_ID}}
+        The id of the current build that Travis CI uses internally.
+    \end{block}
+    \begin{block}{\texttt{TRAVIS\_BUILD\_NUMBER}}
+        The number of the current build (for example, \texttt{4}).
+    \end{block}
+    \begin{block}{\texttt{TRAVIS\_COMMIT}}
+        The commit that the current build is testing.
+    \end{block}
+    \begin{block}{\texttt{TRAVIS\_COMMIT\_MESSAGE}}
+        The commit subject and body, unwrapped.
+    \end{block}
+    \begin{block}{\texttt{TRAVIS\_COMMIT\_RANGE}}
+        The range of commits that were included in the push or pull request. Note that this is empty for builds triggered by the initial commit of a new branch.
+    \end{block}
+    \begin{block}{\texttt{TRAVIS\_EVENT\_TYPE}}
+        Indicates how the build was triggered. One of \texttt{push}, \texttt{pull\_request}, \texttt{api}, \texttt{cron}.
+    \end{block}
+    \begin{block}{\texttt{TRAVIS\_JOB\_ID}}
+        The id of the current job that Travis CI uses internally.
+    \end{block}
+    \begin{block}{\texttt{TRAVIS\_JOB\_NUMBER}}
+        The number of the current job (for example, \texttt{4.1}).
+    \end{block}
+    \begin{block}{\texttt{TRAVIS\_OS\_NAME}}
+        On multi-OS builds, this value indicates the platform the job is running on. Values are \texttt{linux} and \texttt{osx} currently, to be extended in the future.
+    \end{block}
+    \begin{block}{\texttt{TRAVIS\_OSX\_IMAGE}}
+        The osx\_image value configured in \texttt{.travis.yml}. If this is not set in \texttt{.travis.yml}, it is empty.
+    \end{block}
+    \begin{block}{\texttt{TRAVIS\_PULL\_REQUEST}}
+        The pull request number if the current job is a pull request, \texttt{false} if it’s not a pull request.
+    \end{block}
+    \begin{block}{\texttt{TRAVIS\_PULL\_REQUEST\_BRANCH}}
+        If the current job is a pull request, the name of the branch from which the PR originated.
+        If the current job is a push build, this variable is empty.
+    \end{block}
+    \begin{block}{\texttt{TRAVIS\_PULL\_REQUEST\_SHA}}
+        If the current job is a pull request, the commit SHA of the HEAD commit of the PR.
+        If the current job is a push build, this variable is empty.
+    \end{block}
+    \begin{block}{\texttt{TRAVIS\_PULL\_REQUEST\_SLUG}}
+        If the current job is a pull request, the slug (in the form \texttt{owner\_name/repo\_name}) of the repository from which the PR originated.
+        If the current job is a push build, this variable is empty.
+    \end{block}
+    \begin{block}{\texttt{TRAVIS\_REPO\_SLUG}}
+        The slug (in form: \texttt{owner\_name/repo\_name}) of the repository currently being built.
+    \end{block}
+    \begin{block}{\texttt{TRAVIS\_SECURE\_ENV\_VARS}}
+        Set to \texttt{true} if there are any encrypted environment variables.
+        Set to \texttt{false} if no encrypted environment variables are available.
+    \end{block}
+    \begin{block}{\texttt{TRAVIS\_SUDO}}
+        \texttt{true} or \texttt{false} based on whether sudo is enabled.
+    \end{block}
+    \begin{block}{\texttt{TRAVIS\_TEST\_RESULT}}
+        \texttt{0} if all commands in the script section (up to the point this environment variable is referenced) have exited with zero; \texttt{1} otherwise.
+    \end{block}
+    \begin{block}{\texttt{TRAVIS\_TAG}}
+        If the current build is for a git tag, this variable is set to the tag's name.
+    \end{block}
+    \begin{block}{\texttt{TRAVIS\_BUILD\_STAGE\_NAME}}
+        The build stage in capitalzed form, e.g. \texttt{Test} or \texttt{Deploy}. If a build does not use build stages, this variable is empty.
+    \end{block}
+\end{frame}
+
+\subsection{Security}
+
+\begin{frame}{Sensible data in builds}
+    It could be useful to access private data from within a build
+    \begin{itemize}
+        \item Downloading a password-protected file
+        \item Decrypt a password-encrypted file
+        \item Open a keystore for signing a file
+        \item Store an API key for a service used e.g. for testing
+        \item Store a OAuth token for accessing a remote service
+    \end{itemize}
+    These data cannot be tracked on the repository (with the exception of encrypted files, but the problem is simply moved to passing the decrypt password to the build system).
+    \begin{itemize}
+        \item These data must be provided in form of enviroment variables
+        \item Travis allows for inserting \textit{secure variables} in the web interface
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Pull request attack}
+    Usually, you want the integrator to build pull requests
+    \begin{itemize}
+        \item You want to test the integration before committing it
+    \end{itemize}
+    What if the pull request changes the \texttt{.travis.yml}, printing all the environment variables?
+    \begin{itemize}
+        \item The developer of an open source project is \textit{defenseless}
+    \end{itemize}
+    Travis CI does not allow access to secure variables when a pull request is executed
+    \begin{itemize}
+        \item As such, typically, the Travis build must be configured to detect whether a pull request is being bult, and in case don't perform tasks that depend on secure variables
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Local Travis installation}
+    Travis CI provides an installable module to help with several tasks otherwise tedious:
+    \begin{itemize}
+        \item Secure encryption of files
+        \begin{itemize}
+            \item You may need your private key for automatic signing, but you want it to be secret and only readable by builds you create
+        \end{itemize}
+        \item Secure encryption of global variables
+        \begin{itemize}
+            \item You may need your password or username or other sensible data to complete the deployment process, but you want it encrypted
+            \item In case of OAuth tokens, you also don't want to waste time dealing with it manually.
+        \end{itemize}
+    \end{itemize}
+    Install Travis CI locally:
+    \begin{enumerate}
+        \item Install RubyGems
+        \begin{itemize}
+            \item On Arch Linux: \texttt{pacman -Syu rubygems ruby-rdoc}
+        \end{itemize}
+        \item Issue: \texttt{gem install travis}
+        \item Make sure your \texttt{PATH} includes the path where gems are installed
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Creating a secure variable}
+    \begin{block}{From the web interface:}
+        \begin{itemize}
+            \item Go to the settings page
+            \item Insert name and value
+            \item Select if it should be displayed on the build
+            \begin{itemize}
+                \item Disable if the variable is meant to be secure
+            \end{itemize}
+            \item Use the environment variable in your build
+        \end{itemize}
+    \end{block}
+    \begin{block}{From the local Travis CI application:}
+        \begin{itemize}
+            \item \texttt{travis encrypt MY\_SECRET\_ENV=super\_secret}
+            \item The secured variable will be printed on terminal
+            \item copy the \texttt{secure="..."} inside your \texttt{.travis.yml}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Ecrypting a file}
+    \begin{block}{From the local Travis CI application:}
+        \begin{itemize}
+            \item \texttt{travis encrypt-file my-super-secret-file}
+            \item A new \texttt{my-super-secret-file.enc} file will be created
+            \begin{itemize}
+                \item It \textit{must} be added to track
+            \end{itemize}
+            \item The originating file \textit{must not} be in track, and must never have been (or it could be recovered): delete it immediately
+            \item copy the \texttt{secure="..."} inside your \texttt{.travis.yml}
+            \item Add the generated \texttt{openssl} command that appears on the terminal to the correct phase of your build
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Don't screw up: non-exhaustive list of advices}
+    \begin{itemize}
+        \item \textbf{DO} generate passwords, never use words related to the repository or project name
+        \item \textbf{DON'T} use settings which duplicate commands to standard output, such as \bashinline{set -x} or \bashinline{set -v} in your bash scripts
+        \item \textbf{DON'T} run \bashinline{env} or \bashinline{printenv}
+        \item \textbf{DON'T} \bashinline{echo "\$SECRET_KEY"}
+        \item \textbf{DON'T} use tools that print secrets on error output, such as \texttt{php -i}
+        \item \textbf{DOUBLE CHECK} before using git fetch or git push, as they might expose tokens or other secure variables
+        \item \textbf{DUOBLE CHECK} for mistakes in string escaping
+        \item \textbf{DUOBLE CHECK} before using settings that increase verbosity
+        \item \textbf{PREFER} redirecting output to /dev/null when possible
+        \begin{itemize}
+            \item e.g. \bashinline{git push url-with-secret >/dev/null 2>&1}
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\subsection{Deployment}
+
+\begin{frame}[fragile]{GitHub Releases}
+    Travis CI can automate deployment of artifacts on GitHub releases
+    \begin{block}{Example \texttt{.travis.yml} configuration}
+        \begin{minted}{yaml}
+deploy:
+  provider: releases
+  api_key:
+    secure: YOUR_API_KEY_ENCRYPTED
+  file: "FILE TO UPLOAD"
+  skip_cleanup: true
+  on:
+    tags: true
+        \end{minted}
+    \end{block}
+    The authentication token for GitHub can be generated locally with:
+    
+    \texttt{travis setup releases}
+    
+    Remember to backup your travis file before running the command
+\end{frame}
+
+\begin{frame}[fragile]{surge.sh}
+    A free host for static websites (HTML + Javascript)
+    \begin{itemize}
+        \item Install surge locally
+        \item Create an account (with email and password)
+        \item Create a new secret variable \texttt{SURGE\_LOGIN}
+        \item Create a new secret variable \texttt{SURGE\_TOKEN}
+        \begin{itemize}
+            \item Obtain the value by using \bashinline{surge token}
+        \end{itemize}
+    \end{itemize}
+    \begin{block}{Example \texttt{.travis.yml} configuration}
+        \begin{minted}{yaml}
+deploy:
+  provider: surge
+  project: ./build/docs/javadoc/
+  domain: myjavadoc.surge.sh
+  skip_cleanup: true
+  on:
+    all_branches: true
+        \end{minted}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Deploy to PyPI}
+    The best place where to put your Python software modules!
+    \begin{itemize}
+        \item Sign up to PyPI
+    \end{itemize}
+    \begin{block}{Example \texttt{.travis.yml} configuration}
+        \begin{minted}{yaml}
+deploy:
+  provider: pypi
+  user: "Your (possibly encrypted) username"
+  password:
+    secure: "Your encrypted password"
+        \end{minted}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Other targets}
+anynines -- Appfog -- Atlas -- AWS CodeDeploy -- AWS Elastic Beanstalk -- AWS Lambda -- AWS OpsWorks -- AWS S3 -- Azure Web Apps -- bintray -- BitBalloon -- Bluemix CloudFoundry -- Boxfuse -- Catalyze -- Chef Supermarket -- Cloud 66 -- CloudFoundry -- Deis -- Engine Yard -- GitHub Pages -- Google App Engine -- Google Cloud Storage -- Google Firebase -- Hackage -- Heroku -- Launchpad -- Modulus -- npm -- OpenShift -- packagecloud.io -- Puppet -- Forge -- PyPI -- Rackspace Cloud Files -- RubyGems -- Scalingo -- Script -- TestFairy -- Ubuntu Snap Store -- Uploading Build Artifacts
+
+Plus any target your build system can directly deal with (e.g. Maven Central)
+\end{frame}
+
+\subsection{Complete builds}
+
+\begin{frame}[fragile]{Example with Python}
+    \begin{itemize}
+        \item The default Python environment uses isolated virtualenvs
+        \item PyPy is supported out of the box
+        \item The script entry is mandatory
+        \item dependencies can be listed in a \texttt{requirements.txt} file
+        \begin{itemize}
+            \item Travis automatically runs \\
+            \bashinline{pip install -r requirements.txt} ~\\
+            during the install phase of the build
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Java examples}
+    Examples of rich, multi-project, multi-language, multi-target deployments are available at:
+    \begin{itemize}
+        \item \url{https://github.com/AlchemistSimulator/Alchemist}
+        \item \url{https://github.com/Protelis/Protelis}
+    \end{itemize}
+\end{frame}
+
+\section*{\refname}
+%===============================================================================
+\begin{frame}[allowframebreaks]
+  \frametitle{\refname}
+  \scriptsize
+  \bibliographystyle{alpha}
+  \bibliography{../bibliography}
+\end{frame}
+\section*{\refname}
+
+\end{document}
