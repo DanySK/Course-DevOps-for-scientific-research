@@ -9,6 +9,7 @@
 *.kate-swp
 *.bbl
 *.blg
+*.directory
 **/_minted*/
 **/build/
 **/.recommenders/
