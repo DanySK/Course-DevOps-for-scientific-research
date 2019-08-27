@@ -7,6 +7,7 @@ addons:
     - texlive-base
     - texlive-latex-extra
     - texlive-latex-recommended
+    - texlive-fonts-recommended
     - tree
 script:
   - bash compile.sh
