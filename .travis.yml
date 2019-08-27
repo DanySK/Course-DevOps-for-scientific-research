@@ -9,6 +9,7 @@ addons:
     - tree
 script:
   - |
+    set -e
     for pack in 0*
     do
         cd $pack
