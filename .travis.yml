@@ -7,7 +7,7 @@ addons:
     - texlive-base
     - texlive-latex-extra
 script: |
-  for $pack in 0*
+  for pack in 0*
   do
     cd $pack
     pdflatex -interaction=nonstopmode -halt-on-error -shell-escape "${pack}.tex"
