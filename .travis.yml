@@ -1,0 +1,15 @@
+dist: bionic
+language: bash
+addons:
+  apt:
+    update: true
+    packages:
+      - texlive-base
+      - texlive-latex-extra
+script: >-
+  for pack in 0*
+  do
+    cd pack
+    pdflatex -interaction=nonstopmode -halt-on-error -shell-escape "${pack}.tex"
+    cd ..
+  done
