@@ -6,7 +6,7 @@ addons:
     packages:
     - texlive-base
     - texlive-latex-extra
-    - latex-beamer
+    - texlive-latex-recommended
     - tree
 script:
   - bash compile.sh
