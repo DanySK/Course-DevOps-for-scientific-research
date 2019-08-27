@@ -2,7 +2,7 @@
 \usetheme{CambridgeUS}
 \usecolortheme{orchid}
 
-\definecolor{themeColor}{HTML}{1dc600}
+\definecolor{themeColor}{HTML}{4e6eff}
 
 \setbeamercolor*{structure}{bg=black,fg=themeColor}
 
@@ -156,8 +156,11 @@ Danilo Pianini\\
     \begin{block}{In this course}
         \begin{itemize}
             \item git, a distributed version control system
-            \item good ``branching model'' for working in parallel
-            \item working with forks and pull requests
+            \item techniques for working in parallel
+            \begin{itemize}
+                \item via ``branching'', for colocated teams
+                \item via ``forking'' for distributed teams
+            \end{itemize}
         \end{itemize}
     \end{block}
 \end{frame}
@@ -182,7 +185,7 @@ Danilo Pianini\\
     \end{block}
     \begin{block}{In this course}
         \begin{itemize}
-            \item Maven Central as repository for JVM-based software
+            \item Maven Central and Bintray as repositories for JVM-based software
             \item Mention of other repositories for different languages
             \item Gradle as dependency manager
         \end{itemize}
@@ -197,7 +200,8 @@ Danilo Pianini\\
             \item Save your time: let the machine build your software
             \item Prevent regressions: always test
             \item Packaging: make the right container for your software
-            \item Reports: be informed about the status of your project
+            \item Documenting: automatically generate a website with API docs
+            \item Reporting: be informed about the status of your project
             \item Signing: let others know that your software is certified
         \end{itemize}
     \end{block}
@@ -218,6 +222,7 @@ Danilo Pianini\\
             \item Detect mistakes early: execute at every change
             \item Save resources: build on a separate machine
             \item Make sure it works: build often even if there are no changes
+            \item Make it work everywhere: test on every supported environment
         \end{itemize}
     \end{block}
     \begin{block}{In this course}
