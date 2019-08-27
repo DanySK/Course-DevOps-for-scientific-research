@@ -6,13 +6,16 @@ addons:
     packages:
     - texlive-base
     - texlive-latex-extra
-script: |
+script:
+  - |
   for pack in 0*
   do
     cd $pack
     pdflatex -interaction=nonstopmode -halt-on-error -shell-escape "${pack}.tex"
     cd ..
   done
+  - ls "${TRAVIS_BUILD_DIR}/0*/0*.pdf"
+  - tree -a
 deploy:
   provider: releases
   api_key:
