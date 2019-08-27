@@ -18,6 +18,8 @@ script:
     done
   - ls "${TRAVIS_BUILD_DIR}/0*/0*.pdf"
   - tree -a
+after_failure:
+  - cat 0*/texput.log
 deploy:
   provider: releases
   api_key:
