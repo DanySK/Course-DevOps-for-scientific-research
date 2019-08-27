@@ -8,15 +8,7 @@ addons:
     - texlive-latex-extra
     - tree
 script:
-  - |
-    set -e
-    for pack in 0*
-    do
-        cd $pack
-        ls -ahl
-        pdflatex -interaction=nonstopmode -halt-on-error -shell-escape "${pack}.tex"
-        cd ..
-    done
+  - bash compile.sh
   - ls "${TRAVIS_BUILD_DIR}/0*/0*.pdf"
   - tree -a
 after_failure:
