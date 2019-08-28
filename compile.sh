@@ -8,5 +8,7 @@ do
     echo current content:
     ls -ahl
     pdflatex -synctex=1 -interaction=nonstopmode -halt-on-error -shell-escape "${pack}.tex"
+    bibtex "${pack}.aux"
+    pdflatex -synctex=1 -interaction=nonstopmode -halt-on-error -shell-escape "${pack}.tex"
     cd ..
 done
