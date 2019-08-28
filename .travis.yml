@@ -4,6 +4,7 @@ addons:
   apt:
     update: true
     packages:
+    - python-pygments
     - texlive-base
     - texlive-latex-extra
     - texlive-latex-recommended
