@@ -7,6 +7,6 @@ do
     pwd
     echo current content:
     ls -ahl
-    pdflatex -interaction=nonstopmode -halt-on-error -shell-escape "${pack}.tex"
+    pdflatex -synctex=1 -interaction=nonstopmode -halt-on-error -shell-escape "${pack}.tex"
     cd ..
 done
