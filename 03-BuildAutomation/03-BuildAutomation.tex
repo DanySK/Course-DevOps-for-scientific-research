@@ -1,23 +1,5 @@
 \documentclass[presentation]{beamer}
-\usetheme{CambridgeUS}
-\usecolortheme{orchid}
-
-\definecolor{themeColor}{HTML}{1dc600}
-
-\setbeamercolor*{structure}{bg=black,fg=themeColor}
-
-\setbeamercolor*{palette primary}{use=structure,fg=white,bg=structure.fg}
-\setbeamercolor*{palette secondary}{use=structure,fg=white,bg=structure.fg!75}
-\setbeamercolor*{palette tertiary}{use=structure,fg=white,bg=structure.fg!50!black}
-\setbeamercolor*{palette quaternary}{fg=white,bg=black}
-
-\setbeamercolor{section in toc}{fg=black,bg=white}
-\setbeamercolor{alerted text}{use=structure,fg=structure.fg!50!black!80!black}
-
-\setbeamercolor{titlelike}{parent=palette primary,fg=structure.fg!50!black}
-\setbeamercolor{frametitle}{bg=structure.fg!10!white,fg=structure.fg!50!black!80!black}
-
-\setbeamercolor*{titlelike}{parent=palette primary}
+\input{../theme-custom.tex}
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -44,23 +26,10 @@
 \usepackage{cleveref}
 \nobibliography*
 
-\title[03 - Dependency Management]{\small{Developing, maintaining, and sharing software tools for research} \\
+\title[03 - Dependency Management]{\small{input{../coursetitle}} \\
 \normalsize{Enforce reproducibility: dependency management and build automation}}
 
-\author[D. Pianini]{
-Danilo Pianini\\
-\texttt{{\footnotesize danilo.pianini@unibo.it}}}
-
-
-\institute[UniBo]
-{\textsc{Alma Mater Studiorum}---Universit\`a di Bologna}
-
-\date[\today{}]{Ph.D. course in Data Science and Computation \\
-\scriptsize \today{} - Bologna (Italy)
-}
-
-\pgfdeclareimage[height=0.625cm]{university-logo}{images/logo}
-\logo{\pgfuseimage{university-logo}}
+\input{../frontmatter.tex}
 
 \newcommand{\codefile}[4]{
 	\begin{block}{\texttt{#2}}
@@ -82,13 +51,7 @@ Danilo Pianini\\
 
 \begin{document}
 
-\AtBeginSubsection[]{%
-  \begin{frame}<beamer>
-    \frametitle{Outline}
-    \tableofcontents[currentsection,currentsubsection]
-  \end{frame}
-  \addtocounter{framenumber}{-1}% If you don't want them to affect the slide number
-}
+\input{../index.tex}
 
 %===============================================================================
 \frame[label=coverpage]{\titlepage}
