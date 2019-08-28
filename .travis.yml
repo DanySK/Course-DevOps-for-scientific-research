@@ -12,7 +12,6 @@ addons:
     - tree
 script:
   - bash compile.sh
-  - ls "${TRAVIS_BUILD_DIR}/0*/0*.pdf"
   - tree -a
 after_failure:
   - cat 0*/texput.log
