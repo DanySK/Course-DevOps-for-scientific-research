@@ -255,21 +255,25 @@
 
 \begin{frame}[fragile]{Possible desired code}
   \begin{block}{}
-    \begin{minted}[fontsize=\scriptsize]{groovy}
+    \begin{minted}[fontsize=\scriptsize]{kotlin}
+// Where to find software packets
 repositories {
-    // Where to find software packets
     mavenCentral()
     jCenter()
 }
-
+// Which software packets we need in each lifecycle phase
 dependencies {
-    // Which software packets we need in each lifecycle phase
-    sourceGeneration 'org.antlr:antlr4:4.7'
-    compile 'org.slf4j:slf4j-api:1.7.25'
-    compile 'org.antlr:antlr-runtime:3.5.2'
-    testCompile 'junit:junit:4.12'
-    runtime 'ch.qos.logback:logback-classic:1.2.2'
-    testRuntime 'ch.qos.logback:logback-classic:1.2.2'
+    // Generating sources
+    sourceGeneration("org.antlr:antlr4:4.7")
+    // Packets of which we inherit the API
+    api("org.slf4j:slf4j-api:1.7.25")
+    // Stuff we use for implementing our own stuff
+    implementation("org.antlr:antlr-runtime:3.5.2")
+    testImplementation("junit:junit:4.12") // Implementing tests
+    // Stuff we use at runtime, but with no compile dependency towards
+    runtimeOnly("ch.qos.logback:logback-classic:1.2.2")
+    // Stuff we use only when running tests
+    testRuntimeOnly("ch.qos.logback:logback-classic:1.2.2")
 }
     \end{minted}
   \end{block}
