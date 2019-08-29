@@ -15,6 +15,10 @@ script:
   - tree -a
 after_failure:
   - cat 0*/texput.log
+before_deploy:
+  - git config --local user.name "Danilo Pianini"
+  - git config --local user.email "danilo.pianini@unibo.it"
+  - git tag $(git describe)
 deploy:
   provider: releases
   api_key:
@@ -24,4 +28,3 @@ deploy:
   skip_cleanup: true
   on:
     repo: DanySK/Course-DevOps-for-scientific-research
-    tags: true
