@@ -103,26 +103,22 @@
 	\end{block}
 	\begin{block}{Questions}
 		\begin{itemize}
-			\item Estimate how much code (in Java) you'd need to write
+			\item Estimate how much code you'd need to write
 			\item How much code can be just inherited from existing, public libraries?
 		\end{itemize}
 	\end{block}
 \end{frame}
 
 \begin{frame}[fragile]{Maybe less code than you may expect}
-	\java{01-dependencies}{src/main/java/it/unibo/ci/PrintBreakingBad.java}{\tiny}
+	\kotlin{01-dependencies}{src/main/kotlin/it/unibo/ci/PrintSeries.kt}{\tiny}
 \end{frame}
 
 \begin{frame}[fragile]{Trick revealed}
   I used a few existing libraries!
   \begin{itemize}
-    \item Google Guava
+    \item Kotlin standard library
     \begin{itemize}
-      \item Used for referencing the UTF-8 \texttt{Charset} without using \texttt{String}s (less error-prone)
-    \end{itemize}
-    \item Apache Commons I/O
-    \begin{itemize}
-      \item Used for converting a resource stream pointing to a \texttt{String} 
+      \item Easy manipulation of resources
     \end{itemize}
     \item Omertron's thetvdbapi
     \begin{itemize}
@@ -135,12 +131,13 @@
 \end{frame}
 
 \subsection{Dependency trees}
-\begin{frame}[fragile]{The actual dependency tree}
+\begin{frame}[fragile]{The actual dependency tree (for compiling)}
   \begin{block}{}
     \begin{minted}[fontsize=\scriptsize]{bash}
-+--- com.google.guava:guava:+ -> 19.0-rc2
-+--- commons-io:commons-io:+ -> 2.4
-\--- com.omertron:thetvdbapi:+ -> 1.7
++--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50
+|    \--- org.jetbrains:annotations:13.0
+\--- com.omertron:thetvdbapi:[1.6, 1.7] -> 1.7
      +--- org.slf4j:slf4j-api:1.7.9
      \--- org.yamj:api-common:1.2
           +--- org.apache.commons:commons-lang3:3.3.2
@@ -158,20 +155,50 @@
   \begin{itemize}
    \item Libraries depend on other libraries
    \item All the libraries must be in the classpath!
+   \item Runtime libraries may differ from compile libraries!
   \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{The actual dependency tree (for runtime)}
+  \begin{block}{}
+    \begin{minted}[fontsize=\scriptsize]{bash}
++--- org.jetbrains.kotlin:kotlin-stdlib:1.3.50
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50
+|    \--- org.jetbrains:annotations:13.0
++--- com.omertron:thetvdbapi:[1.6, 1.7] -> 1.7
+|    +--- org.slf4j:slf4j-api:1.7.9
+|    \--- org.yamj:api-common:1.2
+|         +--- org.apache.commons:commons-lang3:3.3.2
+|         +--- commons-dbcp:commons-dbcp:1.4
+|         |    \--- commons-pool:commons-pool:1.5.4 -> 1.6
+|         +--- commons-pool:commons-pool:1.6
+|         +--- commons-codec:commons-codec:1.10
+|         +--- org.apache.httpcomponents:httpclient:4.3.6
+|         |    +--- org.apache.httpcomponents:httpcore:4.3.3
+|         |    +--- commons-logging:commons-logging:1.1.3
+|         |    \--- commons-codec:commons-codec:1.6 -> 1.10
+|         \--- org.slf4j:slf4j-api:1.7.9
+\--- javax.xml.ws:jaxws-api:+ -> 2.3.1
+     +--- javax.xml.bind:jaxb-api:2.3.1
+     |    \--- javax.activation:javax.activation-api:1.2.0
+     +--- javax.xml.soap:javax.xml.soap-api:1.4.0
+     \--- javax.annotation:javax.annotation-api:1.3.2
+    \end{minted}
+  \end{block}
 \end{frame}
 
 \subsection{Preventing dependency hells}
 \begin{frame}[fragile, allowframebreaks]{Towards a dependency hell}
-	This was a toy program, consisting of a single Java source file of some twenty lines of code.
+	This was a toy program, consisting of a single source file of few lines of code.
 
-	Regardless, it requires \textbf{12} external libraries in order to run.
+	Regardless, it requires \textbf{20} external libraries in order to run.
 	
 	\begin{block}{Libraries explosion}
 		\begin{itemize}
-			\item It is very common for a non-toy project to get past 50 dependencies
+			\item It is very common for a non-toy project to get past 100 dependencies
 			\begin{itemize}
-				\item Alchemist, big but not huge, counts more than 120 dependencies
+				\item Alchemist, big but not huge, counts more than 330 dependencies
+				\item (and that's runtime \textbf{alone})
 			\end{itemize}
 			\item Hard to search, download and verify compatibilities by hand 
 			\item Version conflicts soon arise
@@ -760,10 +787,10 @@ dependencies {
 \end{frame}
 
 \begin{frame}[fragile,allowframebreaks]{Java project with dependencies}
-    \java{01-dependencies}{src/main/java/it/unibo/ci/PrintBreakingBad.java}{\tiny}
-    \groovy{01-dependencies}{build.gradle}{\normalsize}
-    \groovy{01-dependencies}{gradle.properties}{\scriptsize}
-    \groovy{01-dependencies}{settings.gradle}{\normalsize}
+    \kotlin{01-dependencies}{src/main/kotlin/it/unibo/ci/PrintSeries.kt}{\tiny}
+    \kotlin{01-dependencies}{build.gradle.kts}{\normalsize}
+    \kotlin{01-dependencies}{gradle.properties}{\scriptsize}
+    \kotlin{01-dependencies}{settings.gradle.kts}{\normalsize}
     \begin{block}{Takeaways}
         \begin{itemize}
             \item Using The Central Repository is just matter of a method call

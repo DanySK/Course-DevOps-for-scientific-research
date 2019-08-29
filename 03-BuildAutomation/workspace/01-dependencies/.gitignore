@@ -1,5 +1,2 @@
-bin/*
-build/*
-
-/bin/
-/build/
+bin/
+build/
