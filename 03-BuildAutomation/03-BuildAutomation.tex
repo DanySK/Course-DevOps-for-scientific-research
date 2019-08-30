@@ -288,7 +288,7 @@ dependencies {
 		\begin{itemize}
 			\item Dependency management
 			\item Software compilation
-			\item Test execution compilation
+			\item Testing
 			\item Documentation generation
 			\item Reports generation
 			\item Artefacts assemblage
@@ -358,17 +358,20 @@ dependencies {
 			\item Customization by scripting
 		\end{itemize}
 	\end{block}
-	\begin{block}{Features}
+	\begin{block}{Features in a box}
 		\begin{itemize}
-			\item The build is written in a Groovy based DSL
+			\item The build is written in Domain Specific Language
+			\begin{itemize}
+			    \item Groovy is the historical hosting language
+			    \item Kotlin is the modern alternative (we are going to use this one)
+			\end{itemize}
 			\item Inherits from Ant the concept of ``target'' (renamed as ``task'')
 			\item Automagic resolution of the order in which tasks should be executed
 			\item Built-in dependency resolution as Maven (SBT and Ant rely on Apache Ivy)
-			\item Incremental builds
-			\item Parallel task execution
+			\item Incremental builds and parallel task execution
 			\item Supports many languages
 			\begin{itemize}
-                \item Java, Scala, Groovy, and C/C++ are first class citizens
+                \item Java, Scala, Groovy, Kotlin, and C/C++ are first class citizens
                 \item Others supported via plugin
 			\end{itemize}
 			\item Maven-style extensibility via plugins
@@ -398,10 +401,10 @@ dependencies {
 
 \begin{frame}[fragile]{Under the hood}
 	\begin{itemize}
-		\item The Gradle build script is a valid Groovy script (if you consider the Gradle API)
-		\item Anything that has not a valid Groovy syntax is not a valid Gradle build script
-		\item Groovy makes it easy to create DSLs, Gradle is built relying on such a feature
-		\item Everything you write is actually proper Groovy code (method calls, closures, and so on), but (you'll see) that aspect is very nicely hidden
+		\item The Gradle build script is a valid Kotlin script (if you consider the Gradle API)
+		\item Anything with invalid Kotlin syntax is not a valid Gradle build script
+		\item Kotlin syntax allows for ``internal'' DSLs, Gradle leverages this feature
+		\item Everything you write is actually proper Kotlin code (method calls, closures, and so on), and you can leverage the language features to customize your build as well
 		\item At the high level, the feeling is to just have to configure an existing plugin, much like Maven, for most of the things you normally do
 		\item When needed, it is easy to configure custom behavior, or fiddle with the internals, in a functional or imperative fashion
 	\end{itemize}
@@ -424,7 +427,11 @@ dependencies {
 
 \begin{frame}[fragile,allowframebreaks]{My first Gradle build}
     \begin{block}{Takeaways}
-        A Gradle build is configured in the \texttt{build.gradle} file.
+        A Gradle build is configured in:
+        \begin{itemize}
+            \item the \texttt{build.gradle.kts} file for Kotlin-based build scripts.
+            \item the \texttt{build.gradle} file for Groovy-based build scripts.
+        \end{itemize}
     \end{block}
     \groovy{02-SimpleTask}{build.gradle}{\normalsize}
     \terminal{02-SimpleTask}{gradle tasks --all}{\tinier} 
