@@ -47,7 +47,7 @@ fun String.runScript(from: File = File(System.getProperty("user.dir"))) {
     val shell = ProcessBuilder("bash")
         .directory(from)
         .redirectError(ProcessBuilder.Redirect.INHERIT)
-        .redirectOutput(createTempFile())
+        .redirectOutput(ProcessBuilder.Redirect.INHERIT)
         .start()
     shell.inputStream.copyTo(System.out)
     PrintWriter(shell.outputStream).use {
