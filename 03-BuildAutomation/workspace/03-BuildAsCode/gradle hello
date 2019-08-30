@@ -1,8 +1,8 @@
 
 > Task :hello
-10 9 8 7 6 5 4 3 2 1 
+10 9 8 7 6 5 4 3 2 1 0
 Hello world!
-0 1 2 3 4 5 6 7 8 9 
+0 1 2 3 4 5 6 7 8 9 10
 
-BUILD SUCCESSFUL in 0s
+BUILD SUCCESSFUL in 836ms
 1 actionable task: 1 executed
