@@ -433,7 +433,7 @@ dependencies {
             \item the \texttt{build.gradle} file for Groovy-based build scripts.
         \end{itemize}
     \end{block}
-    \groovy{02-SimpleTask}{build.gradle.kts}{\normalsize}
+    \kotlin{02-SimpleTask}{build.gradle.kts}{\normalsize}
     \terminal{02-SimpleTask}{gradle tasks --all}{\tinier} 
     \terminal{02-SimpleTask}{gradle hello}{\normalsize}
 \end{frame}
@@ -446,7 +446,7 @@ dependencies {
             \item Arbitrary operations can be (pre-/ap-)pended to existing tasks
         \end{itemize}
     \end{block}
-    \groovy{03-BuildAsCode}{build.gradle.kts}{\normalsize}
+    \kotlin{03-BuildAsCode}{build.gradle.kts}{\normalsize}
     \terminal{03-BuildAsCode}{gradle hello}{\normalsize}
 \end{frame}
 
@@ -460,7 +460,7 @@ dependencies {
             \item Gradle resolves dependencies automatically
         \end{itemize}
     \end{block}
-    \groovy{04-TaskDependencies}{build.gradle.kts}{\scriptsize}
+    \kotlin{04-TaskDependencies}{build.gradle.kts}{\scriptsize}
     \terminal{04-TaskDependencies}{gradle tasks --all}{\tinier}
     \terminal{04-TaskDependencies}{gradle complete}{\normalsize}
 \end{frame}
@@ -472,29 +472,8 @@ dependencies {
             \item The \texttt{-q} flag quietens the output
         \end{itemize}
     \end{block}
-    \groovy{05-DynamicTasks}{build.gradle.kts}{\scriptsize}
+    \kotlin{05-DynamicTasks}{build.gradle.kts}{\scriptsize}
     \terminal{05-DynamicTasks}{gradle -q task42}{\normalsize}
-\end{frame}
-
-\begin{frame}[fragile,allowframebreaks]{Adding properties to tasks}
-    \begin{block}{Takeaways}
-        \begin{itemize}
-            \item Tasks can enriched with properties by using \texttt{ext}
-            \item Such properties can be accessed by other tasks
-        \end{itemize}
-    \end{block}
-    \groovy{06-TaskProperties}{build.gradle}{\scriptsize}
-    \terminal{06-TaskProperties}{gradle printProperty}{\normalsize}
-\end{frame}
-
-\begin{frame}[fragile,allowframebreaks]{Configuring default tasks}
-    \begin{block}{Takeaways}
-        \begin{itemize}
-            \item A set of tasks can be selected to be executed automatically in case no task is manually specified
-        \end{itemize}
-    \end{block}
-    \groovy{07-DefaultTasks}{build.gradle}{\scriptsize}
-    \terminal{07-DefaultTasks}{gradle}{\tinier}
 \end{frame}
 
 \begin{frame}[fragile,allowframebreaks]{Using plugins}
