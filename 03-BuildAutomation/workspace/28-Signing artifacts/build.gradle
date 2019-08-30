@@ -1,0 +1,26 @@
+apply plugin: 'java'
+
+buildscript {
+    repositories {
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath "org.ajoberstar:gradle-git:${grgitVersion}"
+    }
+}
+apply plugin: "org.ajoberstar.grgit"
+
+def currentSha = grgit.head().id
+/*
+ * Check if it is a tagged version
+ */
+def tags = grgit.tag.list()
+def tag = tags.find() { it.commit.id == currentSha }
+if (tag == null) {
+    project.version = "${project.version}-${grgit.head().abbreviatedId}".take(20)
+} else if (tag.name == project.version) {
+    println "This is tagged as the official version ${project.version}"
+} else {
+    project.version = "${project.version}-${tag.name}-${grgit.head().abbreviatedId}".take(20)
+}
+println "Due to your git repo status, the project version is detected as ${project.version}"
