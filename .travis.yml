@@ -17,8 +17,14 @@ addons:
     - texlive-fonts-recommended
     # Debug
     - tree
+install:
+  - curl -s "https://get.sdkman.io" | bash
+  - echo sdkman_auto_answer=true > ~/.sdkman/etc/config
+  - source "$HOME/.sdkman/bin/sdkman-init.sh"
+  - sdk install kotlin
+  - sdk install kscript
 script:
-  - bash compile.sh
+  - ./build.kts
   - tree -a
 after_failure:
   - cat 0*/texput.log
