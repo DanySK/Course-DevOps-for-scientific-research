@@ -1,8 +1,0 @@
-
-> Configure project :
-I can access my property defined in a file
-But also properties defined in the CLI.
-
-> Task :printProperties UP-TO-DATE
-
-BUILD SUCCESSFUL in 0s

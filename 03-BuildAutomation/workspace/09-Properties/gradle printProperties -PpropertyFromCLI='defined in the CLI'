@@ -1,7 +1,0 @@
-
-> Task :printProperties
-I can access my property defined in a file
-But also properties defined in the CLI.
-
-BUILD SUCCESSFUL in 0s
-1 actionable task: 1 executed

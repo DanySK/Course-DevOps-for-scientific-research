@@ -498,20 +498,6 @@ dependencies {
     \terminal{08-Plugin}{gradle hello}{\tinier}
 \end{frame}
 
-\begin{frame}[fragile,allowframebreaks]{Properties}
-    \begin{block}{Takeaways}
-        \begin{itemize}
-            \item Tasks don't accept parameters
-            \item Tasks can access project variables
-            \item Variables can be passed through the command line with the \texttt{-P} option
-            \item Variables can be set in an ancillary \texttt{gradle.properties} file
-        \end{itemize}
-    \end{block}
-    \groovy{09-Properties}{build.gradle}{\scriptsize}
-    \terminal{09-Properties}{gradle.properties}{\scriptsize}
-    \terminal{09-Properties}{gradle printProperties -PpropertyFromCLI='defined in the CLI'}{\normalsize}
-\end{frame}
-
 \begin{frame}[fragile,allowframebreaks]{Setting a project name}
     \begin{block}{Takeaways}
         \begin{itemize}
