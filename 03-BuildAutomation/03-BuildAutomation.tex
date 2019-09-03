@@ -479,17 +479,22 @@ dependencies {
 \begin{frame}[fragile,allowframebreaks]{Using plugins}
     \begin{block}{Takeaways}
         \begin{itemize}
-            \item A plugin is a container of tasks
+            \item A plugin extends the functionality of Gradle
             \item A huge number of plugins exist
-            \item Plugin configuration happens in a \texttt{buildscript} block
-            \item Repositories where to download plugins are specified in a \texttt{repositories} block
-            \item Usually repositories are in Maven (Ivy) format, there is specific support for that
-            \item The plugin executables must be specified in a \texttt{classpath block}
-            \item Plugins, once included, need to be applied explicitly
+            \begin{itemize}
+                \item see: \url{https://plugins.gradle.org/}
+            \end{itemize}
             \item Once applied, tasks and configurations introduced by the plugin are available for the buildscript
+            \item Plugins can be written quite easily
+            \begin{itemize}
+                \item Documentation is good
+                \item If you have many similar projects, it may be way better to write your own plugin rather than copypasting the build script
+                \item I wrote \href{several plugins myself}{https://plugins.gradle.org/search?term=org.danilopianini}...
+            \end{itemize}
         \end{itemize}
     \end{block}
-    \groovy{08-Plugin}{build.gradle}{\scriptsize}
+    \kotlin{08-Plugin}{build.gradle.kts}{\scriptsize}
+    \terminal{08-Plugin}{gradle tasks --all}{\tiny}
     \terminal{08-Plugin}{gradle hello}{\tinier}
 \end{frame}
 

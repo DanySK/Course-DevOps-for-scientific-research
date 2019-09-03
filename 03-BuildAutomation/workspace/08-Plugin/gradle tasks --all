@@ -1,0 +1,22 @@
+
+> Task :tasks
+
+------------------------------------------------------------
+Tasks runnable from root project
+------------------------------------------------------------
+
+Build Setup tasks
+-----------------
+...
+
+Help tasks
+----------
+...
+
+Other tasks
+-----------
+hello
+...
+
+BUILD SUCCESSFUL in 343ms
+1 actionable task: 1 executed
