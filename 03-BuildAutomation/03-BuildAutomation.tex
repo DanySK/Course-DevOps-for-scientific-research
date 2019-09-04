@@ -608,25 +608,34 @@ dependencies {
 \begin{frame}[fragile]{The Java plugin \cite{java-gradle-plugin}}
     \begin{itemize}
         \item The Java plugin is included in the Gradle distribution
+        \begin{itemize}
+            \item Two fashions: for applications, and for libraries
+        \end{itemize}
         \item Introduces the concept of \textit{source set}
         \begin{itemize}
-            \item A logical group of sources and resources that share the same dependencies and classpath
+            \item A group of (re)sources sharing the same dependencies and classpath
         \end{itemize}
         \item Provides two default source sets:
         \begin{itemize}
             \item \texttt{main} --- containing the application code and resources
             \item \texttt{test} --- extends \texttt{main} and contains tests and related tools
         \end{itemize}
-        \item Provides a number of \textit{dependency configurations} (scopes):
-        \begin{itemize}
-            \item \texttt{compile} --- libraries required to compile the project
-            \item \texttt{testCompile} --- extends \texttt{compile}, including libraries for compiling the test sources
-            \item \texttt{runtime} --- extends \texttt{compile}, including libraries required at runtime but not at compile time
-            \item \texttt{testRuntime} --- extends \texttt{runtime} and \texttt{testCompile} with libreries required for test runtime
-        \end{itemize}
-        \item Provides a number of tasks 
+        \item Dependencies are bound to scopes named ``configurations'', that ultimately define the classpath.
     \end{itemize}
 \end{frame}
+
+% \begin{frame}[fragile]{Dependency configurations}
+%     Dependencies are bound to scopes named ``configurations'', that ultimately define the classpath.
+%     \begin{itemize}
+%         \item \texttt{api} --- re-exposed libraries (for libraries only): projects using this library will be able to access the dependencies listed here
+%         \item \texttt{implementation} --- extends \texttt{api}, adding libraries required to compile and run the project. Inheriting projects won't be able to access them.
+%         \item \texttt{testImplementation} --- extends \texttt{implementation}, including libraries for compiling and running the tests
+%         \item \texttt{runtimeOnly} --- libraries required at runtime, but not at compile time (e.g. Logback, if the project uses SLF4J)
+%         \item \texttt{testRuntimeOnly} --- as above, for tests
+%         \item \texttt{compileOnly} --- libraries required for compiling, that should not be included into runtime
+%         \item \texttt{testCompileOnly} --- as above, for tests
+%     \end{itemize}
+% \end{frame}
 
 \begin{frame}[fragile]{Convention over configuration}
     By default, the plugin assumes a conventional structure for the project
@@ -638,16 +647,16 @@ dependencies {
         \end{itemize}
         \item Inside such folders, the Java sources should be in in a \texttt{java} subfolder, and resources in a \texttt{resources} subfolder
     \end{itemize}
-    You are free to do things differently, but you need to resort to manual configuration
+    You are free to do things differently, but you need configure manually
     \begin{minted}{text}
-+-- src
-|   +-- main
-|   |   +-- java
-|   |   \-- resources
-|   \-- test
-|       +-- java
-|       \-- resources
-\-- build.gradle
+        +-- src
+        |   +-- main
+        |   |   +-- java
+        |   |   \-- resources
+        |   \-- test
+        |       +-- java
+        |       \-- resources
+        \-- build.gradle.kts
     \end{minted}
 \end{frame}
 
@@ -660,7 +669,7 @@ dependencies {
         \item \texttt{javadoc} --- generates the API documentation. Depends on \texttt{compile}.
         \item \texttt{clean} --- deletes the content of the build directory
         \item \texttt{assemble} --- assembles all the archives in the projects (including JARs)
-        \item \texttt{check} --- performs the tests on the project
+        \item \texttt{check} --- performs tests and code quality checks on the project
         \item \texttt{build} --- performs a full build of the project. Depends on \texttt{check} and \texttt{assemble}.
     \end{itemize}
 \end{frame}
@@ -676,7 +685,7 @@ dependencies {
         \end{itemize}
     \end{block}
     \terminal{13-Java}{tree before}{\normalsize}
-    \groovy{13-Java}{build.gradle}{\normalsize}
+    \groovy{13-Java}{build.gradle.kts}{\normalsize}
     \java{13-Java}{src/main/java/HelloWorld.java}{\normalsize}
     \terminal{13-Java}{gradle clean build}{\scriptsize}
     \terminal{13-Java}{tree after}{\scriptsize}

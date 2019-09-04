@@ -10,7 +10,7 @@
 │       ├── compileJava
 │       └── jar
 │           └── MANIFEST.MF
-├── build.gradle
+├── build.gradle.kts
 └── src
     └── main
         └── java

@@ -1,5 +1,5 @@
 .
-├── build.gradle
+├── build.gradle.kts
 └── src
     └── main
         └── java
