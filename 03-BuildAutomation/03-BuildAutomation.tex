@@ -846,40 +846,19 @@ dependencies {
     \end{block}
 \end{frame}
 
-\subsection{C/C++}
+\subsection{C++/Swift}
 
-\begin{frame}[fragile]{C/C++ and Gradle}
-    C and C++ are first class citizens in Gradle
+\begin{frame}[fragile]{C++/Swift and Gradle}
+    C++ and Swift are first class citizens in Gradle
     \begin{block}{Main features}
         \begin{itemize}
-            \item No classic dependency management for C could be mimicked
-            \begin{itemize}
-                \item You are a bit on your own
-            \end{itemize}
-            \item There is support for several toolchains (in italic the experimental ones)
+            \item Support for several toolchains (in italic the experimental ones)
             \begin{itemize}
                 \item GCC and Clang on Linux and \textit{other Unix}
                 \item XCode, \textit{GCC (from Macports)}, and \textit{Clang (from Macports)} on MacOS
                 \item VisualC++, Cygwin32, \textit{Cygwin64}, and MinGW on Windows
             \end{itemize}
-            \item Some care must be provided for cross-compilation
-            \item Convention over configuration introduces some unusual ways of organising code
-            \begin{itemize}
-                \item There are guides for that \footnote{\url{https://bit.ly/2LnKHOz}}
-            \end{itemize}
-        \end{itemize}
-    \end{block}
-\end{frame}
-
-\begin{frame}[fragile,allowframebreaks]{Simple C application}
-    \ccode{17-C}{src/main/c/greeting.h}{\normalsize}
-    \ccode{17-C}{src/main/c/main.c}{\normalsize}
-    \groovy{17-C}{settings.gradle}{\normalsize}
-    \groovy{17-C}{build.gradle}{\normalsize}
-    \begin{block}{Takeaways}
-        \begin{itemize}
-            \item Native build definitions happen inside a \texttt{model} block
-            \item Native executables are defined by a name and a \texttt{NativeExecutableSpec}
+            \item Cross-compilation is possible
         \end{itemize}
     \end{block}
 \end{frame}
@@ -887,23 +866,8 @@ dependencies {
 \begin{frame}[fragile,allowframebreaks]{Simple C++ application}
     \ccode{18-CPP}{src/main/cpp/greeting.hpp}{\normalsize}
     \ccode{18-CPP}{src/main/cpp/main.cpp}{\normalsize}
-    \groovy{18-CPP}{settings.gradle}{\normalsize}
-    \groovy{18-CPP}{build.gradle}{\normalsize}
-    \begin{block}{Takeaways}
-        \begin{itemize}
-            \item Basically the same thing as building plain C
-            \item In fact the toolchain is basically unified
-        \end{itemize}
-    \end{block}
-\end{frame}
-
-\begin{frame}[fragile]{Advanced examples}
-    Gradle has rich documentation on building native software:
-    \begin{itemize}
-        \item Documentation on building native software \footnote{\url{https://docs.gradle.org/4.7/userguide/native_software.html}}
-        \item Building C/C++ libraries \footnote{\url{https://guides.gradle.org/building-cpp-libraries/}}
-        \item A repository of examples in C, C++, and Swift \footnote{\url{https://github.com/gradle/native-samples}}
-    \end{itemize}
+    \groovy{18-CPP}{settings.gradle.kts}{\normalsize}
+    \groovy{18-CPP}{build.gradle.kts}{\normalsize}
 \end{frame}
 
 \subsection{Other languages}
