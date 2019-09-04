@@ -1,4 +1,0 @@
-task hello {
-    group 'Greetings'
-    doLast { println("Hello from $project.name") }
-}
