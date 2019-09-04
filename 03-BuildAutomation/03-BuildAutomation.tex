@@ -776,7 +776,7 @@ dependencies {
 
 \begin{frame}[fragile,allowframebreaks]{Java project with dependencies}
     \kotlin{01-dependencies}{src/main/kotlin/it/unibo/ci/PrintSeries.kt}{\tiny}
-    \kotlin{01-dependencies}{build.gradle.kts}{\normalsize}
+    \kotlin{01-dependencies}{build.gradle.kts}{\scriptsize}
     \kotlin{01-dependencies}{settings.gradle.kts}{\normalsize}
     \begin{block}{Takeaways}
         \begin{itemize}
@@ -785,19 +785,6 @@ dependencies {
             \item \texttt{sourceCompatibility} can be specified to enforce a specific bytecode (and syntax) version
             \item It is a good idea to store properties for the project in the property file
             \item Versions can be specified as exact, ranges, or as latest (risky, don't!)
-        \end{itemize}
-    \end{block}
-\end{frame}
-
-\begin{frame}[fragile,allowframebreaks]{Executing Java programs}
-    \java{14-Execution}{src/main/java/it/unibo/ci/PrintBreakingBad.java}{\tiny}
-    \groovy{14-Execution}{build.gradle}{\scriptsize}
-    \groovy{14-Execution}{gradle.properties}{\scriptsize}
-    \groovy{14-Execution}{settings.gradle}{\normalsize}
-    \begin{block}{Takeaways}
-        \begin{itemize}
-            \item It's possible to extend existing task types
-            \item An extended task inherits the properties of the parent
         \end{itemize}
     \end{block}
 \end{frame}
