@@ -501,8 +501,7 @@ dependencies {
 \begin{frame}[fragile,allowframebreaks]{Setting a project name}
     \begin{block}{Takeaways}
         \begin{itemize}
-            \item If no project name is set, the project will be named after the enclosing folder            \item The project name (and other settings) can be controlled by changing \texttt{settings.gradle}
-            \item \texttt{settings.gradle} can refer to variables defined in \texttt{gradle.properties}
+            \item If no project name is set, the project will be named after the enclosing folder            \item The project name (and other settings) can be controlled by changing \texttt{settings.gradle.kts}
         \end{itemize}
     \end{block}
     \kotlin{10-ProjectName}{build.gradle.kts}{\scriptsize}
@@ -516,9 +515,8 @@ dependencies {
             \item Tasks can be set a group and a description
         \end{itemize}
     \end{block}
-    \terminal{11-TaskDescription}{settings.gradle}{\scriptsize}
-    \terminal{11-TaskDescription}{gradle.properties}{\scriptsize}
-    \groovy{11-TaskDescription}{build.gradle}{\scriptsize}
+    \terminal{11-TaskDescription}{settings.gradle.kts}{\scriptsize}
+    \groovy{11-TaskDescription}{build.gradle.kts}{\scriptsize}
     \terminal{11-TaskDescription}{gradle tasks}{\tinier}
 \end{frame}
 
