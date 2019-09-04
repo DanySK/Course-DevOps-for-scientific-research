@@ -1318,20 +1318,6 @@ dependencies {
     \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile, allowframebreaks]{Generating Ivy and Maven compatible metadata in Gradle}
-    While a library jar is automatically produced by the \texttt{jar} task of the Java plugin, the companion Ivy metadata is not by default
-    \begin{itemize}
-        \item A maven plugin is distributed with the tool
-        \item It provides a factory for pom files
-        \item It provides an \texttt{uploadArchives} task for preparing a Maven-compatible distribution
-        \begin{itemize}
-            \item Including a valid POM descriptor
-        \end{itemize}
-    \end{itemize}
-    \kotlin{23-POM}{gradle.properties}{\scriptsize}
-    \kotlin{23-POM}{build.gradle}{\tinier}
-\end{frame}
-
 \begin{frame}[fragile, allowframebreaks]{Generating a ``fat jar'' in Gradle}
     A fat jar:
     \begin{itemize}
@@ -1342,24 +1328,49 @@ dependencies {
         \end{itemize}
     \end{itemize}
     No default task is provided, we need to write one manually extending the existing \texttt{jar}
-    \kotlin{24-Fatjar}{gradle.properties}{\scriptsize}
-    \kotlin{24-Fatjar}{build.gradle}{\tinier}
+    \begin{block}{}
+    \begin{minted}[fontsize=\tiny]{kotlin}
+tasks.register<Jar>("fatJar") {
+    dependsOn(subprojects.map { it.tasks.withType<Jar>() })
+    manifest {
+        attributes(mapOf(
+            "Implementation-Title" to "Alchemist",
+            "Implementation-Version" to rootProject.version,
+            "Main-Class" to "it.unibo.alchemist.Alchemist",
+            "Automatic-Module-Name" to "it.unibo.alchemist"
+        ))
+    }
+    archiveBaseName.set("${rootProject.name}-redist")
+    isZip64 = true
+    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) }) {
+        // remove all signature files
+        exclude("META-INF/")
+        exclude("build")
+        exclude(".gradle")
+        exclude("build.gradle")
+        exclude("gradle")
+        exclude("gradlew")
+        exclude("gradlew.bat")
+    }
+    with(tasks.jar.get() as CopySpec)
+}
+    \end{minted}
+    \end{block}
 \end{frame}
 
 \begin{frame}[fragile, allowframebreaks]{DVCS-Sensible build}
     You may want the build system to automatically detect the project version from the DVCS and act accordingly
     \begin{itemize}
         \item e.g. if it is tagged and sits on main, it is a release
-        \item Otherwise, it is a beta, and we may want to identify it
+        \item Otherwise, it is a development preview, and we may want to identify it
         \item No direct support in Gradle 
         \begin{itemize}
-            \item But you can use a full fledged programming language as Groovy...
-            \item And there exist a GrGit library for interacting with git!
+            \item But you can exploit Kotlin directly...
+            \item ...and since i needed it, I wrote a plugin myself
         \end{itemize}
     \end{itemize}
-    \kotlin{26-Git}{settings.gradle}{\scriptsize}
-    \kotlin{26-Git}{gradle.properties}{\scriptsize}
-    \kotlin{26-Git}{build.gradle}{\tiny}
+    \kotlin{26-Git}{settings.gradle.kts}{\scriptsize}
+    \kotlin{26-Git}{build.gradle.kts}{\tiny}
 \end{frame}
 
 \begin{frame}[fragile,allowframebreaks]{Packaging with Python setuptools}
