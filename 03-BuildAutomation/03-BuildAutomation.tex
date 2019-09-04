@@ -516,7 +516,7 @@ dependencies {
         \end{itemize}
     \end{block}
     \terminal{11-TaskDescription}{settings.gradle.kts}{\scriptsize}
-    \groovy{11-TaskDescription}{build.gradle.kts}{\scriptsize}
+    \kotlin{11-TaskDescription}{build.gradle.kts}{\scriptsize}
     \terminal{11-TaskDescription}{gradle tasks}{\tinier}
 \end{frame}
 
@@ -685,7 +685,7 @@ dependencies {
         \end{itemize}
     \end{block}
     \terminal{13-Java}{tree before}{\normalsize}
-    \groovy{13-Java}{build.gradle.kts}{\normalsize}
+    \kotlin{13-Java}{build.gradle.kts}{\normalsize}
     \java{13-Java}{src/main/java/HelloWorld.java}{\normalsize}
     \terminal{13-Java}{gradle clean build}{\scriptsize}
     \terminal{13-Java}{tree after}{\scriptsize}
@@ -830,8 +830,8 @@ dependencies {
     \groovy{16-Multilang}{src/main/groovy/HelloGroovy.groovy}{\normalsize}
     \kotlin{16-Multilang}{src/main/kotlin/HelloKt.kt}{\normalsize}
     \scala{16-Multilang}{src/main/scala/HelloScala.scala}{\normalsize}
-    \groovy{16-Multilang}{settings.gradle.kts}{\normalsize}
-    \groovy{16-Multilang}{build.gradle.kts}{\footnotesize}
+    \kotlin{16-Multilang}{settings.gradle.kts}{\normalsize}
+    \kotlin{16-Multilang}{build.gradle.kts}{\footnotesize}
     \terminal{16-Multilang}{gradle clean build}{\tiny}
     \begin{block}{Takeaways}
         \begin{itemize}
@@ -866,8 +866,8 @@ dependencies {
 \begin{frame}[fragile,allowframebreaks]{Simple C++ application}
     \ccode{18-CPP}{src/main/cpp/greeting.hpp}{\normalsize}
     \ccode{18-CPP}{src/main/cpp/main.cpp}{\normalsize}
-    \groovy{18-CPP}{settings.gradle.kts}{\normalsize}
-    \groovy{18-CPP}{build.gradle.kts}{\normalsize}
+    \kotlin{18-CPP}{settings.gradle.kts}{\normalsize}
+    \kotlin{18-CPP}{build.gradle.kts}{\normalsize}
 \end{frame}
 
 \subsection{Other languages}
@@ -889,7 +889,7 @@ dependencies {
     \end{block}
 \end{frame}    
 \begin{frame}[fragile]{Working with Python virtual environments}
-    A virtual environment for Python isolates application-specific dependencies from a shared (system-wide) python installation
+    A virtual environment for Python isolates application-specific dependencies from a shared (system-wide) Python installation
     \begin{itemize}
         \item Python 3.4+ is shipped with the capability of creating a virtual environment with the \texttt{pip} package manager pre-installed
         \item A new virtual environment can be created by issuing:
@@ -900,7 +900,7 @@ dependencies {
         \begin{itemize}
             \item \texttt{source \textit{foldername}/bin/activate}
         \end{itemize}
-        \item Commands issued within an activate shell will be executed in the virtual environment
+        \item Commands issued within an ``active'' shell will be executed in the virtual environment
         \begin{itemize}
             \item e.g. \texttt{pip install xarray} would install xarray in the virtual environment, not system wide.
         \end{itemize}
@@ -985,8 +985,8 @@ dependencies {
 \begin{frame}[fragile,allowframebreaks]{Test automation with Gradle and JUnit}
     \java{15-Test}{src/main/java/POJO.java}{\tinier}
     \java{15-Test}{src/test/java/TestPOJO.java}{\tinier}
-    \groovy{15-Test}{build.gradle.kts}{\scriptsize}
-    \groovy{15-Test}{settings.gradle.kts}{\normalsize}
+    \kotlin{15-Test}{build.gradle.kts}{\scriptsize}
+    \kotlin{15-Test}{settings.gradle.kts}{\normalsize}
     \terminal{15-Test}{gradle clean build}{\tiny}
     \centering
     \includegraphics[width=.9\textwidth,height=.8\textheight,keepaspectratio]{img/gradleTestReport0}
@@ -1003,24 +1003,24 @@ dependencies {
     \end{block}
 \end{frame}
 
-\begin{frame}[fragile, allowframebreaks]{Other frameworks}
-    \begin{block}{C}
-        CUnit\footnote{\url{http://cunit.sourceforge.net/}} is natively supported:
-        \begin{minted}{groovy}
-apply plugin: 'cunit-test-suite'
-        \end{minted}
-    \end{block}
-    \begin{block}{C++}
-        Google Test\footnote{\url{https://github.com/google/googletest}} is natively supported:
-        \begin{minted}{groovy}
-apply plugin: 'google-test'
-        \end{minted}
-    \end{block}
-    \begin{block}{Javascript}
-        Third party plugin\fnurl{https://github.com/dzhaughnroth/jasmine-gradle-plugin} available for Jasmine\footnote{\url{https://jasmine.github.io/}}.
-    \end{block}
-\end{frame}
-
+% \begin{frame}[fragile, allowframebreaks]{Other frameworks}
+%     \begin{block}{C}
+%         CUnit\footnote{\url{http://cunit.sourceforge.net/}} is natively supported:
+%         \begin{minted}{groovy}
+% apply plugin: 'cunit-test-suite'
+%         \end{minted}
+%     \end{block}
+%     \begin{block}{C++}
+%         Google Test\footnote{\url{https://github.com/google/googletest}} is natively supported:
+%         \begin{minted}{groovy}
+% apply plugin: 'google-test'
+%         \end{minted}
+%     \end{block}
+%     \begin{block}{Javascript}
+%         Third party plugin\fnurl{https://github.com/dzhaughnroth/jasmine-gradle-plugin} available for Jasmine\footnote{\url{https://jasmine.github.io/}}.
+%     \end{block}
+% \end{frame}
+% 
 \begin{frame}[fragile]{Test coverage}
     Test coverage detects:
     \begin{itemize}
@@ -1072,9 +1072,8 @@ apply plugin: 'google-test'
 \begin{frame}[fragile,allowframebreaks]{Coverage with Gradle and JaCoCo}
     \java{19-Coverage}{src/main/java/POJO.java}{\tinier}
     \java{19-Coverage}{src/test/java/TestPOJO.java}{\tinier}
-    \groovy{19-Coverage}{gradle.properties}{\scriptsize}
-    \groovy{19-Coverage}{build.gradle}{\scriptsize}
-    \groovy{19-Coverage}{settings.gradle}{\normalsize}
+    \kotlin{19-Coverage}{build.gradle.kts}{\scriptsize}
+    \kotlin{19-Coverage}{settings.gradle.kts}{\normalsize}
     \includegraphics[width=.9\textwidth,height=.8\textheight,keepaspectratio]{img/jacocoTestReport0}
     \includegraphics[width=.9\textwidth,height=.8\textheight,keepaspectratio]{img/jacocoTestReport1}
     \includegraphics[width=.9\textwidth,height=.8\textheight,keepaspectratio]{img/jacocoTestReport3}
@@ -1211,9 +1210,8 @@ apply plugin: 'google-test'
 \begin{frame}[fragile,allowframebreaks]{Checking code quality with Checkstyle and Gradle}
     \java{20-Checkstyle}{src/main/java/POJO.java}{\tinier}
     \java{20-Checkstyle}{src/test/java/TestPOJO.java}{\tinier}
-    \groovy{20-Checkstyle}{gradle.properties}{\scriptsize}
-    \groovy{20-Checkstyle}{build.gradle}{\scriptsize}
-    \groovy{20-Checkstyle}{settings.gradle}{\normalsize}
+    \kotlin{20-Checkstyle}{build.gradle.kts}{\scriptsize}
+    \kotlin{20-Checkstyle}{settings.gradle.kts}{\normalsize}
     \begin{block}{\texttt{config/checkstyle/checkstyle.xml}}
         \inputminted[fontsize=\tiny,linenos=true,breaklines=true,firstline=1,lastline=25]{xml}{workspace/20-Checkstyle/config/checkstyle/checkstyle.xml}
     \end{block}
@@ -1242,9 +1240,8 @@ apply plugin: 'google-test'
     \begin{block}{\texttt{config/checkstyle/checkstyle.xml}}
         \inputminted[fontsize=\tiny,linenos=true,breaklines=true,firstline=1,lastline=25]{xml}{workspace/21-Dashboard/config/checkstyle/checkstyle.xml}
     \end{block}
-    \groovy{21-Dashboard}{gradle.properties}{\scriptsize}
-    \groovy{21-Dashboard}{settings.gradle}{\normalsize}
-    \groovy{21-Dashboard}{build.gradle}{\scriptsize}
+    \kotlin{21-Dashboard}{settings.gradle}{\normalsize}
+    \kotlin{21-Dashboard}{build.gradle}{\scriptsize}
 \end{frame}
 
 \begin{frame}[fragile]{Gradle build scans}
@@ -1263,9 +1260,9 @@ apply plugin: 'google-test'
 \end{frame}
 
 \begin{frame}[fragile,allowframebreaks]{Generating and publishing a build scan}
-    \groovy{22-Scans}{gradle.properties}{\scriptsize}
-    \groovy{22-Scans}{settings.gradle}{\normalsize}
-    \groovy{22-Scans}{build.gradle}{\tiny}
+    \kotlin{22-Scans}{gradle.properties}{\scriptsize}
+    \kotlin{22-Scans}{settings.gradle}{\normalsize}
+    \kotlin{22-Scans}{build.gradle}{\tiny}
     \begin{block}{}
         The result is available at\\ \url{https://scans.gradle.com/s/qd2mieqffudwk}
     \end{block}
@@ -1332,8 +1329,8 @@ apply plugin: 'google-test'
             \item Including a valid POM descriptor
         \end{itemize}
     \end{itemize}
-    \groovy{23-POM}{gradle.properties}{\scriptsize}
-    \groovy{23-POM}{build.gradle}{\tinier}
+    \kotlin{23-POM}{gradle.properties}{\scriptsize}
+    \kotlin{23-POM}{build.gradle}{\tinier}
 \end{frame}
 
 \begin{frame}[fragile, allowframebreaks]{Generating a ``fat jar'' in Gradle}
@@ -1346,8 +1343,8 @@ apply plugin: 'google-test'
         \end{itemize}
     \end{itemize}
     No default task is provided, we need to write one manually extending the existing \texttt{jar}
-    \groovy{24-Fatjar}{gradle.properties}{\scriptsize}
-    \groovy{24-Fatjar}{build.gradle}{\tinier}
+    \kotlin{24-Fatjar}{gradle.properties}{\scriptsize}
+    \kotlin{24-Fatjar}{build.gradle}{\tinier}
 \end{frame}
 
 \begin{frame}[fragile, allowframebreaks]{DVCS-Sensible build}
@@ -1361,9 +1358,9 @@ apply plugin: 'google-test'
             \item And there exist a GrGit library for interacting with git!
         \end{itemize}
     \end{itemize}
-    \groovy{26-Git}{settings.gradle}{\scriptsize}
-    \groovy{26-Git}{gradle.properties}{\scriptsize}
-    \groovy{26-Git}{build.gradle}{\tiny}
+    \kotlin{26-Git}{settings.gradle}{\scriptsize}
+    \kotlin{26-Git}{gradle.properties}{\scriptsize}
+    \kotlin{26-Git}{build.gradle}{\tiny}
 \end{frame}
 
 \begin{frame}[fragile,allowframebreaks]{Packaging with Python setuptools}
