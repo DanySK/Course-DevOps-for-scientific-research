@@ -1,23 +1,5 @@
 \documentclass[presentation]{beamer}
-\usetheme{CambridgeUS}
-\usecolortheme{orchid}
-
-\definecolor{themeColor}{HTML}{1dc600}
-
-\setbeamercolor*{structure}{bg=black,fg=themeColor}
-
-\setbeamercolor*{palette primary}{use=structure,fg=white,bg=structure.fg}
-\setbeamercolor*{palette secondary}{use=structure,fg=white,bg=structure.fg!75}
-\setbeamercolor*{palette tertiary}{use=structure,fg=white,bg=structure.fg!50!black}
-\setbeamercolor*{palette quaternary}{fg=white,bg=black}
-
-\setbeamercolor{section in toc}{fg=black,bg=white}
-\setbeamercolor{alerted text}{use=structure,fg=structure.fg!50!black!80!black}
-
-\setbeamercolor{titlelike}{parent=palette primary,fg=structure.fg!50!black}
-\setbeamercolor{frametitle}{bg=structure.fg!10!white,fg=structure.fg!50!black!80!black}
-
-\setbeamercolor*{titlelike}{parent=palette primary}
+\input{../theme-custom.tex}
 
 \usepackage[utf8]{inputenc}
 \usepackage{amssymb}
@@ -38,23 +20,16 @@
 \usepackage{cleveref}
 \nobibliography*
 
-\title[04 - Continuous Integration]{\small{Developing, maintaining, and sharing software tools for research} \\
+\title[04 - Continuous Integration]{\small{\input{../coursetitle}} \\
 \normalsize{Continuous integration}}
 
-\author[D. Pianini]{
-Danilo Pianini\\
-\texttt{{\footnotesize danilo.pianini@unibo.it}}}
+\input{../frontmatter.tex}
 
-
-\institute[UniBo]
-{\textsc{Alma Mater Studiorum}---Universit\`a di Bologna}
-
-\date[\today{}]{Ph.D. course in Data Science and Computation \\
-\scriptsize \today{} - Bologna (Italy)
+\newcommand{\codefile}[4]{
+	\begin{block}{\texttt{#2}}
+		\inputminted[fontsize=#3,linenos=true,breaklines=true]{#4}{"workspace/#1/#2"}
+	\end{block}
 }
-
-\pgfdeclareimage[height=0.625cm]{university-logo}{images/logo}
-\logo{\pgfuseimage{university-logo}}
 
 \begin{document}
 
@@ -115,7 +90,7 @@ Danilo Pianini\\
 		\end{center}
 		\begin{itemize}
 			\item Classically used with a negative meaning
-			\item It's time to rehabilitate it
+			\item Not so bad if done appropriately
 		\end{itemize}
 		\textbf{Make it easy to access and use the latest prototype}
 	\end{block}
@@ -123,7 +98,7 @@ Danilo Pianini\\
 		\centering
 		\includegraphics[width=.49\textwidth]{images/compiling}
 
-		\textbf{Make the building process fast!}
+		\textbf{Make the building process fast!} (or move it elsewhere...)
 	\end{block}
 \end{frame}
 
@@ -161,7 +136,6 @@ Danilo Pianini\\
 		\end{itemize}
 		\item Free for open source projects
 		\item Cronjobs
-		\item Build instances based on Docker
 		\item Project-local configuration via YAML (in the \texttt{.travis.yml} file)
 		\item Out of the box support for Gradle
 		\item Dozens of deployment targets
@@ -170,10 +144,10 @@ Danilo Pianini\\
 
 \begin{frame}[fragile]{How it works}
 	\begin{itemize}
-		\item A web-hook can be registered to your GitHub repository that triggers Travis CI at each new commit
+		\item A web-hook can be registered to your GitHub repository that triggers Travis CI at each push
 		\item Travis CI starts a pristine appropriate environment
 		\begin{itemize}
-			\item Can be a container or a full virtual machine, depending on whether \texttt{sudo} is required \cite{travisbuild}
+			\item Can be a container or a full fledged virtual machine
 		\end{itemize}
 		\item The project gets cloned
 		\item The configured commands are executed
@@ -242,6 +216,7 @@ language: python
         \begin{itemize}
             \item Either because you want to customize it
             \item Or because you are using something that is not in the spectrum of supported features
+            \item Or because Travis does not use the right tool in the right way\footnote{\url{https://travis-ci.community/t/openjdk-12-no-longer-usable/2718}}
         \end{itemize}
         \item Bash commands can be configured to be executed in place of the default behavior
     \end{itemize}
@@ -249,8 +224,10 @@ language: python
         \begin{minted}[fontsize=\scriptsize]{yaml}
 language: java
 script:
-  - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash build.sh; fi'
-  - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then bash build_pull_req.sh; fi'
+  - cd myProject
+  - ./gradlew runMyCustomTasks
+  - cd ..
+  - bash myPostBuildScript.sh
         \end{minted}
     \end{block}
 \end{frame}
@@ -261,7 +238,7 @@ script:
         \item Ubuntu LTS is generally used
         \item The version of Ubuntu can be selected in a \texttt{dist} section
         \begin{itemize}
-            \item At the time of writing, \texttt{trusty} and precise are \texttt{available}
+            \item At the time of writing, \texttt{trusty}, \texttt{xenial}, and \texttt{bionic} are \texttt{available}
         \end{itemize}
         \item Mac OS X can be used by specifying \texttt{os: osx} in place of \texttt{dist}
     \end{itemize}
@@ -276,49 +253,20 @@ script:
     \end{block}
 \end{frame}
 
-\begin{frame}[fragile]{\texttt{.travis.yml}: enabling super user access}
-    \begin{itemize}
-        \item By default, Travis CI builds in a docker container
-        \begin{itemize}
-            \item It's way faster than a VM, especially in terms of start up time
-        \end{itemize}
-        \item Docker does not allow for super-user access though
-        \item Sometimes it is required
-        \begin{itemize}
-            \item e.g. for customizing the OS by installing packages
-        \end{itemize}
-        \item In such case, \texttt{sudo: required} switches the build to a full fledged VM with super user access
-    \end{itemize}
-    \begin{block}{Example}
-        \begin{minted}[fontsize=\scriptsize]{yaml}
-language: python
-dist: trusty
-sudo: required
-script:
-  - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash build.sh; fi'
-  - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then bash build_pull_req.sh; fi'
-        \end{minted}
-    \end{block}
-\end{frame}
-
 \begin{frame}[fragile]{The build lifecycle in Travis}
+    Every phase is a list of bash commands
     \begin{enumerate}
         \item Install --- Install any dependency required
         \begin{enumerate}
-            \item \texttt{apt addons} --- Optional
-            \item \texttt{cache components} --- Optional
-            \item \texttt{before\_install} --- Install additional dependencies in form of Ubuntu packages using \texttt{apt}
+            \item \texttt{before\_install}
             \item \texttt{install}
-        \end{enumerate}
-        \item Script --- Run the build script
-        \begin{enumerate}
-            \item \texttt{before\_script} --- Preparation for the build
-            \item \texttt{script} --- Actual build
-            \item \texttt{before\_cache} --- Optional
+            \item \texttt{before\_script}
+            \item \texttt{script}
+            \item \texttt{before\_cache}
             \item \texttt{after\_success} or \texttt{after\_failure} --- Execute additional scripts depending on the outcome of the build
-            \item \texttt{before\_deploy} --- Optional, used to prepare resources to be uploaded
-            \item \texttt{deploy} --- Optional, used to actually deploy the produced artifacts
-            \item \texttt{after\_deploy} --- Optional, additional operations to be executed after deployment
+            \item \texttt{before\_deploy}
+            \item \texttt{deploy}
+            \item \texttt{after\_deploy}
             \item \texttt{after\_script}
         \end{enumerate}
     \end{enumerate}
@@ -328,11 +276,7 @@ script:
     \begin{block}{Example}
         \begin{minted}[fontsize=\scriptsize]{yaml}
 language: java
-dist: trusty
-sudo: required
-before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install -y graphviz
+dist: bionic
 before_install: echo Begin actual build
 script:
   - ./gradlew clean build
@@ -548,16 +492,213 @@ after_deploy: echo Deployment phase concluded.
         \item \textbf{DO} generate passwords, never use words related to the repository or project name
         \item \textbf{DON'T} use settings which duplicate commands to standard output, such as \bashinline{set -x} or \bashinline{set -v} in your bash scripts
         \item \textbf{DON'T} run \bashinline{env} or \bashinline{printenv}
-        \item \textbf{DON'T} \bashinline{echo "\$SECRET_KEY"}
+        \item \textbf{DON'T} \input{dollarworkaround.tex}
         \item \textbf{DON'T} use tools that print secrets on error output, such as \texttt{php -i}
         \item \textbf{DOUBLE CHECK} before using git fetch or git push, as they might expose tokens or other secure variables
-        \item \textbf{DUOBLE CHECK} for mistakes in string escaping
-        \item \textbf{DUOBLE CHECK} before using settings that increase verbosity
+        \item \textbf{DOUBLE CHECK} for mistakes in string escaping
+        \item \textbf{DOUBLE CHECK} before using settings that increase verbosity
         \item \textbf{PREFER} redirecting output to /dev/null when possible
         \begin{itemize}
             \item e.g. \bashinline{git push url-with-secret >/dev/null 2>&1}
         \end{itemize}
     \end{itemize}
+\end{frame}
+
+\subsection{Environment customization}
+
+\begin{frame}[fragile]{Global variables}
+    Further variables (besides those built-in) can be specified
+    \begin{block}{Custom environment variables}
+         \begin{minted}[fontsize=\normalsize]{yaml}
+env:
+  global:
+    - FOO="bar"
+    - BAR="baz"
+        \end{minted}
+    \end{block}
+\end{frame}
+
+
+\begin{frame}[fragile]{Operating system selection}
+    Travis CI currently supports builds Linux, MacOS X, and Windows
+    \begin{itemize}
+        \item You can select the OS by using the \texttt{os} key
+        \item \texttt{linux} is the default, if left unspecified
+        \item \texttt{osx} and \texttt{windows} are the alternatives
+        \item \texttt{dist} only makes sense under Linux, it is ignored otherwise
+        \item Much like \texttt{dist}, the OSX version can be selected with \texttt{osx\_image}
+        \item Under Windows, Git bash is used
+    \end{itemize}
+    \begin{block}{Using OSX}
+         \begin{minted}[fontsize=\normalsize]{yaml}
+os: osx
+osx_image: xcode11
+         \end{minted}
+    \end{block}
+    \begin{block}{Using Windows}
+         \begin{minted}[fontsize=\normalsize]{yaml}
+os: windows
+         \end{minted}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile, allowframebreaks]{Installing packages}
+    \begin{block}{Under Linux}
+        Two options:
+        \begin{enumerate}
+            \item preferred: using the \texttt{addons} key
+            \begin{minted}[fontsize=\scriptsize]{yaml}
+addons:
+  apt:
+    # optional, updates the package database
+    update: true
+    packages:
+    - graphviz
+    - maven
+            \end{minted}
+        \item manually invoking apt-get
+            \begin{minted}[fontsize=\scriptsize]{yaml}
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install -y graphviz maven
+            \end{minted}
+        \end{enumerate}
+    Custom repositories can be configured
+    \end{block}
+    \begin{block}{Under MacOS X}
+        Homebrew is supported:
+        \begin{minted}[fontsize=\scriptsize]{yaml}
+addons:
+  homebrew:
+    packages:
+    - graphviz
+    - maven
+    update: true
+        \end{minted}
+        \begin{itemize}
+            \item Falling back to the terminal is always possible
+            \item Third party repositories (taps) are supported
+            \item Brewfiles are supported
+        \end{itemize}
+    \end{block}
+    \begin{block}{Under Windows}
+        \begin{itemize}
+            \item Direct installation via shell is the only way
+            \item Much more limited than OSX and Linux
+            \item Chocolatey\footnote{\url{https://chocolatey.org/}} is preinstalled
+        \end{itemize}
+        \begin{minted}[fontsize=\normalsize]{yaml}
+    before_install:
+        - choco install maven graphviz
+        \end{minted}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{JDK limitations on Travis CI}
+    \begin{block}{JDK on Travis}
+        Travis allows to select the JDK with the \texttt{jdk} key.
+        \begin{minted}[fontsize=\normalsize]{yaml}
+jdk: openjdk11
+        \end{minted}
+        However (ab)uses \texttt{install-jdk.sh}\footnote{\url{https://github.com/sormuras/bach/blob/master/install-jdk.sh}} to do so:
+        \begin{itemize}
+            \item Unsupported on Windows
+            \item Breaks very frequently (download locations change)
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Working around limitations}
+    \begin{itemize}
+        \item A multiplatform Java installer exists: Jabba\footnote{\scriptsize\url{https://github.com/shyiko/jabba}}
+        \item Jabba could be installed, then used to install and configure the JDK
+        \item Installation is not trivial and requires some caveats
+        \item I prepared a script to work around the issue\footnote{\scriptsize\url{https://github.com/DanySK/Gravis-CI/blob/master/.install-jdk-travis.sh}}
+        \item Configures the JDK specified in the \texttt{JDK} environment variable
+    \end{itemize}
+    \begin{block}{}
+        \begin{minted}[fontsize=\tiny]{yaml}
+language: bash
+os: windows
+env:
+    # This is a convenience variable for shortening download commands
+    - GRAVIS="https://raw.githubusercontent.com/DanySK/Gravis-CI/master/"
+    - JDK="adopt-openj9@1.11"
+before_install:
+  # Download the script
+  - curl "${GRAVIS}.install-jdk-travis.sh" --output ~/.install-jdk-travis.sh
+  # Download, install, configue the JDK, and export the configuration to the current shell
+  - source ~/.install-jdk-travis.sh
+        \end{minted}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Git-sensitive versioning on Travis}
+    \begin{itemize}
+        \item In order to improve performance, by default Gradle limits the clone depth
+        \begin{itemize}
+            \item Namely, downloads only the latest 50 commits
+            \item There is an option for that in git, we skipped it
+        \end{itemize}
+        \item This may impact the version computation!
+    \end{itemize}
+    \begin{block}{Clone the entire repository}
+        \begin{minted}[fontsize=\normalsize]{yaml}
+git:
+  depth: false
+        \end{minted}
+    \end{block}
+\end{frame}
+
+\subsection{Multi-OS and multi-environment}
+
+\begin{frame}{The build matrix}
+    \begin{itemize}
+        \item Usually, software targets more than a platform
+        \begin{itemize}
+            \item e.g., support for Linux, Windows, and Mac OS
+            \item Support for Java 8, 11, and 12
+            \item Support for Amazon Corretto or other peculiar environments
+        \end{itemize}
+        \item You'd like to test it in all the supported configurations
+        \begin{itemize}
+            \item The example above would require 12 combinations
+        \end{itemize}
+        \item Gradle supports build matrices, building the cartesian product of:
+        \begin{itemize}
+            \item Non-global environment variables
+            \item Operating systems
+            \item Build environments
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Build matrix example}
+\end{frame}
+
+\begin{frame}{Multi-OS build}
+\end{frame}
+
+\begin{frame}{Excluding and including jobs}
+\end{frame}
+
+\begin{frame}{Build stages}
+\end{frame}
+
+\begin{frame}{Workspaces}
+\end{frame}
+
+\subsection{Performance}
+
+\begin{frame}{Caching}
+\end{frame}
+
+\begin{frame}{Windows-specific issues}
+    Gradle does not stop
+    CRLF
+\end{frame}
+
+\begin{frame}{Disabling Windows Defender}
 \end{frame}
 
 \subsection{Deployment}
