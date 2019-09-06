@@ -650,57 +650,6 @@ git:
     \end{block}
 \end{frame}
 
-\subsection{Multi-OS and multi-environment}
-
-\begin{frame}{The build matrix}
-    \begin{itemize}
-        \item Usually, software targets more than a platform
-        \begin{itemize}
-            \item e.g., support for Linux, Windows, and Mac OS
-            \item Support for Java 8, 11, and 12
-            \item Support for Amazon Corretto or other peculiar environments
-        \end{itemize}
-        \item You'd like to test it in all the supported configurations
-        \begin{itemize}
-            \item The example above would require 12 combinations
-        \end{itemize}
-        \item Gradle supports build matrices, building the cartesian product of:
-        \begin{itemize}
-            \item Non-global environment variables
-            \item Operating systems
-            \item Build environments
-        \end{itemize}
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Build matrix example}
-\end{frame}
-
-\begin{frame}{Multi-OS build}
-\end{frame}
-
-\begin{frame}{Excluding and including jobs}
-\end{frame}
-
-\begin{frame}{Build stages}
-\end{frame}
-
-\begin{frame}{Workspaces}
-\end{frame}
-
-\subsection{Performance}
-
-\begin{frame}{Caching}
-\end{frame}
-
-\begin{frame}{Windows-specific issues}
-    Gradle does not stop
-    CRLF
-\end{frame}
-
-\begin{frame}{Disabling Windows Defender}
-\end{frame}
-
 \subsection{Deployment}
 
 \begin{frame}[fragile]{GitHub Releases}
@@ -770,6 +719,241 @@ anynines -- Appfog -- Atlas -- AWS CodeDeploy -- AWS Elastic Beanstalk -- AWS La
 \vspace{10pt}
 
 Plus any target your build system can directly deal with (e.g. Maven Central)
+\end{frame}
+
+\subsection{Multi-OS and multi-environment}
+
+\begin{frame}{The build matrix}
+    \begin{itemize}
+        \item Usually, software targets more than a platform
+        \begin{itemize}
+            \item e.g., support for Linux, Windows, and Mac OS
+            \item Support for Java 8, 11, and 12
+            \item Support for Amazon Corretto or other peculiar environments
+        \end{itemize}
+        \item You'd like to test it in all the supported configurations
+        \begin{itemize}
+            \item The example above would require 12 combinations
+        \end{itemize}
+        \item Gradle supports build matrices, building the cartesian product of:
+        \begin{itemize}
+            \item Non-global environment variables
+            \item Operating systems
+            \item Build environments
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Build matrix example}
+    \begin{block}{Expansion into four builds}
+        \begin{minted}[fontsize=\scriptsize]{yaml}
+# YAML anchors, allows for reusing variables, not Travis stuff
+reference_jdk: &reference_jdk
+  'JDK="adopt@1.11"'
+reference_os: &reference_os
+  'linux'
+os:
+  - osx
+  - windows
+  - *reference_os
+env:
+  # Not expanded
+  global:
+    - TERM=dumb
+  # Expanded
+  matrix:
+    - *reference_jdk
+    - JDK="adopt-openj9@1.11"
+    - JDK="adopt@1.12"
+    - JDK="adopt-openj9@1.12"
+        \end{minted}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Explicit inclusion and exclusion}
+    \begin{block}{Expansion into four builds}
+        \begin{minted}[fontsize=\scriptsize]{yaml}
+os:
+  - osx
+  - windows
+  - linux
+env:
+  matrix:
+    - JDK="adopt-openj9@1.11"
+    - JDK="adopt@1.12"
+    - JDK="adopt-openj9@1.12"
+matrix:
+  exclude:
+    - os: linux
+      env: JDK="adopt@1.12"
+  include:
+    - os: linux
+      env: JDK="adopt@1.8" LEGACY="true"
+        \end{minted}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Build stages}
+    \begin{block}{Problem: not all builds on a multi-build are equal}
+        \begin{itemize}
+            \item How to deploy only from a specific OS and environment?
+            \item How to run different tests in different environments?
+        \end{itemize}
+    \end{block}
+    Travis CI provides the concept of stages
+    \begin{itemize}
+        \item Groups of jobs that can be executed concurrently
+        \item Multiple stages run sequentially
+        \item A stage can start if all previous stage's builds completed successfully
+        \item If no stage is mentioned, the default \texttt{test} is used
+        \begin{itemize}
+            \item Expanded builds from matrix are in \texttt{test}
+        \end{itemize}
+    \end{itemize}
+    \begin{block}{Example}
+        \begin{enumerate}
+            \item Stage check: run all tests on the reference platform
+            \item Stage multi-platform: run tests on all target platforms
+            \item Stage deploy: publish artifacts
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile, allowframebreaks]{Example with stages}
+    \begin{block}{Matrix configuration and stage declaration}
+        \begin{minted}[fontsize=\normalsize]{yaml}
+os: [osx, windows, *reference_os]
+stages: [check, test, deploy]
+env:
+  matrix:
+    - *reference_jdk
+    - JDK="adopt-openj9@1.11"
+    - JDK="adopt@1.12"
+    - JDK="adopt-openj9@1.12"
+        \end{minted}
+    \end{block}
+    \begin{block}{Stage configuration}
+        \begin{minted}[fontsize=\tiny]{yaml}
+jobs:
+  include:
+    - stage: check
+      name: "You can rename stages"
+      os: *reference_os
+      env: [*reference_jdk]
+      script:
+        - ./gradlew mySuperDeepCheck
+    - stage: deploy
+      name: "Reports and deployment"
+      # Conditional execution
+      if: repo = env(OFFICIAL_REPO_SLUG) AND type != pull_request
+      os: *reference_os
+      env: [PUBLISH="true", *reference_jdk]
+      install:
+        - bash install-my-dependencies.sh
+      script:
+        - ./gradlew buildArtifacts -x test
+      after_success:
+        - ./gradlew publish
+        \end{minted}
+    \end{block}
+    \begin{block}{Selective deployment}
+        \begin{minted}[fontsize=\normalsize]{yaml}
+deploy:
+  - provider: surge
+    skip_cleanup: true
+    project: "./build/myArtifact/"
+    domain: mydomain.sh
+    # Restrict deployment
+    on:
+      os: *reference_os
+      repo: *official_repo
+      branch: develop
+      # Conditional deployments can check for a
+      # *single condition* on an environment variable
+      condition: $PUBLISH = "true"
+        \end{minted}
+    \end{block}
+\end{frame}
+
+
+% \begin{frame}{Workspaces}
+% 
+% \end{frame}
+
+\subsection{Performance and issues}
+
+\begin{frame}[fragile]{Caching}
+    \begin{itemize}
+        \item Builds may cache some information to be used on next runs
+        \begin{itemize}
+            \item Various dependencies
+            \item e.g. maven and Gradle caches
+        \end{itemize}
+        \item Cached elements are packed in an archive
+        \item The archive is downloaded and unpacked in subsequent builds
+        \item There is one archive per OS per environment
+        \item Minimal changes to the environment invalidate the cache
+        \item Cache are not shared among the jobs of the same build
+    \end{itemize}
+    \begin{block}{}
+        \begin{minted}[fontsize=\scriptsize]{yaml}
+before_cache:
+  # Cleanup the cache, for Gradle there are utilities in Gravis-CI
+  - curl "${GRAVIS}.clean_gradle_cache.sh" --output .clean_gradle_cache.sh
+  - bash .clean_gradle_cache.sh
+cache:
+  # Decide what to cache
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+        \end{minted}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile, allowframebreaks]{Windows-specific issues}
+    \begin{block}{Gradle daemon termination}
+        \begin{itemize}
+            \item Gradle builds on Windows won't terminate
+            \item The Gradle wrapper remains alive
+            \item The build is then forcibly killed 10 minutes after success by the system
+        \end{itemize}
+        \begin{minted}[fontsize=\footnotesize]{yaml}
+install:
+  - export GRADLE_OPTS="-Dorg.gradle.daemon=false $GRADLE_OPTS"
+        \end{minted}
+        \textbf{Note:} Gravis-CI JDK installation does it automatically
+    \end{block}
+    \begin{block}{Git autocrlf}
+        \begin{itemize}
+            \item Git by default converts LF line endings to CRLF on Windows
+            \item This may disrupt code quality checks
+            \item The repo must get deleted and recovered
+        \end{itemize}
+        \begin{minted}[fontsize=\footnotesize]{yaml}
+before_install:
+  - git config --global core.autocrlf false
+  - git config core.autocrlf false
+  - git rm --cached -r .
+  - git reset --hard
+        \end{minted}
+    \end{block}
+    \begin{block}{Windows defender}
+        \begin{itemize}
+            \item Windows has a default antivirus
+            \item it kicks in often, slowing down the build
+            \item Particularly slow if caches are used
+            \item Delays build time significantly
+            \item It's basically useless, and should be disabled
+            \item Problem: it should be disabled before cache unpacking, but there is no stage available to fit commands in...
+            \item Workaround: exploit command substitution on environment initialization
+        \end{itemize}
+        \begin{minted}[fontsize=\footnotesize,breaklines]{yaml}
+env:
+  global:
+    # This work around disables it before caching
+    - NO_WIN_DEFENDER=$(curl "${GRAVIS}.disable-windows-defender.sh" --output .no-defender.sh && source .no-defender.sh)
+        \end{minted}
+    \end{block}
 \end{frame}
 
 \subsection{Complete builds}
