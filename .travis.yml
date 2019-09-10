@@ -35,7 +35,7 @@ after_failure:
 before_deploy:
   - git config --local user.name "Danilo Pianini"
   - git config --local user.email "danilo.pianini@unibo.it"
-  - if [[ $(git describe) == *"-"* ]]; then git tag $(git describe); fi
+  - if [[ $(git describe) == *"-"* ]]; then git tag $(git describe) || :; fi
 before_cache:
   - curl "${GRAVIS}.clean_gradle_cache.sh" --output .clean_gradle_cache.sh
   - bash .clean_gradle_cache.sh
