@@ -29,8 +29,8 @@ install:
   - sdk install kscript
 script:
   - ./build.kts
-  - tree -a
 after_failure:
+  - tree -a
   - cat 0*/texput.log
 before_deploy:
   - git config --local user.name "Danilo Pianini"
