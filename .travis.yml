@@ -52,3 +52,4 @@ deploy:
   skip_cleanup: true
   on:
     repo: DanySK/Course-DevOps-for-scientific-research
+    tags: true
