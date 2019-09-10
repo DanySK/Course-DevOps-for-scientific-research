@@ -44,12 +44,21 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 deploy:
-  provider: releases
-  api_key:
-    secure: m2NCvHgkQJ8SuoYK35wzwZuZzX9nmXmZyTaRa+pXWC8y4XQmbhf9L4YPCz2dBJG9OCCjoEBNwVNQsJuxNZsRaBL/81DBDAfsFKWNedZ2yp3Ij1CRZV3fo9lOE19cx+N6Ae89mPvOz5HYSn+FUETMOPxXGsZduvB1nQsHxA0pemTSaQzpTvVY/rKUCEVW5LP1Be9/Z5Ck3+VXn/rNFr7pylPagqarvA3bKz36YmrjIc2q2GaF/MyEBAJsHVvNrBuzgtSNzu1qEI0oDl4lvOExCWcJ+x1pWz4O7ffWZrDMeIhWDVPVnW2ppjD67ZQfYRYqx6uYtEBOJrL64ILw1zHHV+IPHqynbQ9JLwd6gWYpd04AqC/IjJvcXdlkTVhi1aNazLT2aIjiYXQScA85MtwpmTNPF7kImcGFXbZo4fOX3b2iDWG5d1rm51xiXDnanIKcKwl7JvtvYHrOyeuv7idn9gr5ukQv6SpMG3TkUIsDa3qpC/3OTQFTp7Kgyh5IFPUo14M45S214IedYsqO96+2d/rqZ/GOrqwTdLQ/np90J0zGS7gZKNt5d/UyUYI9qqyNNsa6DTx+eTJtkBZVJ+BVn8S833B9vNCQMVUwzlh7LqiV5mBNIFVdWi4OlccskSk2BBWty/0n9DrLUOUJqoxaiXR2rlhgnKkThT2yltrQBwE=
-  file_glob: true
-  file: "${TRAVIS_BUILD_DIR}/0*/0*.pdf"
-  skip_cleanup: true
-  on:
-    repo: DanySK/Course-DevOps-for-scientific-research
-    tags: true
+  - provider: releases
+    api_key:
+      secure: m2NCvHgkQJ8SuoYK35wzwZuZzX9nmXmZyTaRa+pXWC8y4XQmbhf9L4YPCz2dBJG9OCCjoEBNwVNQsJuxNZsRaBL/81DBDAfsFKWNedZ2yp3Ij1CRZV3fo9lOE19cx+N6Ae89mPvOz5HYSn+FUETMOPxXGsZduvB1nQsHxA0pemTSaQzpTvVY/rKUCEVW5LP1Be9/Z5Ck3+VXn/rNFr7pylPagqarvA3bKz36YmrjIc2q2GaF/MyEBAJsHVvNrBuzgtSNzu1qEI0oDl4lvOExCWcJ+x1pWz4O7ffWZrDMeIhWDVPVnW2ppjD67ZQfYRYqx6uYtEBOJrL64ILw1zHHV+IPHqynbQ9JLwd6gWYpd04AqC/IjJvcXdlkTVhi1aNazLT2aIjiYXQScA85MtwpmTNPF7kImcGFXbZo4fOX3b2iDWG5d1rm51xiXDnanIKcKwl7JvtvYHrOyeuv7idn9gr5ukQv6SpMG3TkUIsDa3qpC/3OTQFTp7Kgyh5IFPUo14M45S214IedYsqO96+2d/rqZ/GOrqwTdLQ/np90J0zGS7gZKNt5d/UyUYI9qqyNNsa6DTx+eTJtkBZVJ+BVn8S833B9vNCQMVUwzlh7LqiV5mBNIFVdWi4OlccskSk2BBWty/0n9DrLUOUJqoxaiXR2rlhgnKkThT2yltrQBwE=
+    file_glob: true
+    file: "${TRAVIS_BUILD_DIR}/0*/0*.pdf"
+    skip_cleanup: true
+    on:
+      repo: DanySK/Course-DevOps-for-scientific-research
+      tags: true
+  - provider: releases
+    api_key:
+      secure: m2NCvHgkQJ8SuoYK35wzwZuZzX9nmXmZyTaRa+pXWC8y4XQmbhf9L4YPCz2dBJG9OCCjoEBNwVNQsJuxNZsRaBL/81DBDAfsFKWNedZ2yp3Ij1CRZV3fo9lOE19cx+N6Ae89mPvOz5HYSn+FUETMOPxXGsZduvB1nQsHxA0pemTSaQzpTvVY/rKUCEVW5LP1Be9/Z5Ck3+VXn/rNFr7pylPagqarvA3bKz36YmrjIc2q2GaF/MyEBAJsHVvNrBuzgtSNzu1qEI0oDl4lvOExCWcJ+x1pWz4O7ffWZrDMeIhWDVPVnW2ppjD67ZQfYRYqx6uYtEBOJrL64ILw1zHHV+IPHqynbQ9JLwd6gWYpd04AqC/IjJvcXdlkTVhi1aNazLT2aIjiYXQScA85MtwpmTNPF7kImcGFXbZo4fOX3b2iDWG5d1rm51xiXDnanIKcKwl7JvtvYHrOyeuv7idn9gr5ukQv6SpMG3TkUIsDa3qpC/3OTQFTp7Kgyh5IFPUo14M45S214IedYsqO96+2d/rqZ/GOrqwTdLQ/np90J0zGS7gZKNt5d/UyUYI9qqyNNsa6DTx+eTJtkBZVJ+BVn8S833B9vNCQMVUwzlh7LqiV5mBNIFVdWi4OlccskSk2BBWty/0n9DrLUOUJqoxaiXR2rlhgnKkThT2yltrQBwE=
+    file_glob: true
+    file: "${TRAVIS_BUILD_DIR}/0*/0*.pdf"
+    skip_cleanup: true
+    on:
+      repo: DanySK/Course-DevOps-for-scientific-research
+      tags: false
