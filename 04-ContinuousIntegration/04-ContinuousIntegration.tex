@@ -475,7 +475,7 @@ after_deploy: echo Deployment phase concluded.
 \begin{frame}{Ecrypting a file}
     \begin{block}{From the local Travis CI application:}
         \begin{itemize}
-            \item \texttt{travis encrypt-file my-super-secret-file}
+            \item \texttt{travis encrypt-file my-super-secret-file}\footnote{Not working in Windows \url{https://github.com/travis-ci/travis-ci/issues/8777}}
             \item A new \texttt{my-super-secret-file.enc} file will be created
             \begin{itemize}
                 \item It \textit{must} be added to track
