@@ -25,7 +25,7 @@ jobs:
         uses: "pascalgn/automerge-action@80acb0f883348dcfd0e526288f7d27a12b9333be"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-          MERGE_LABELS: "!blocked"
+          MERGE_LABELS: "version-upgrade,!blocked"
           MERGE_REMOVE_LABELS: ""
           MERGE_METHOD: "rebase"
           MERGE_COMMIT_MESSAGE: "pull-request-title"
@@ -33,5 +33,5 @@ jobs:
           MERGE_FORKS: "false"
           MERGE_RETRIES: "60"
           MERGE_RETRY_SLEEP: "600000"
-          UPDATE_LABELS: "!blocked"
+          UPDATE_LABELS: "version-upgrade"
           UPDATE_METHOD: "rebase"
