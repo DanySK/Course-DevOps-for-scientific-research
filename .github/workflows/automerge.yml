@@ -34,4 +34,4 @@ jobs:
           MERGE_RETRIES: "60"
           MERGE_RETRY_SLEEP: "600000"
           UPDATE_LABELS: "!blocked"
-          UPDATE_METHOD: "merge"
+          UPDATE_METHOD: "rebase"
