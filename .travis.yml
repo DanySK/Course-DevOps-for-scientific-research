@@ -5,6 +5,11 @@ language: bash
 git:
   depth: false
 
+branches:
+  except:
+    - /^untagged/
+    - /^\d+\.\d+\.\d+-\w+-\w+/
+
 addons:
   apt:
     update: true
