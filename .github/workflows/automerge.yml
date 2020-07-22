@@ -34,5 +34,3 @@ jobs:
           MERGE_COMMIT_MESSAGE: "pull-request-title"
           MERGE_FILTER_AUTHOR: "DanySK"
           MERGE_FORKS: "false"
-          UPDATE_LABELS: "version-upgrade"
-          UPDATE_METHOD: "rebase"
