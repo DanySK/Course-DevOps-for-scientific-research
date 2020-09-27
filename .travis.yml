@@ -17,7 +17,7 @@ addons:
     # LaTeX decent font processor
     - cm-super
     # For Minted
-    - python-pygments
+    - python3-pygments
     # LaTeX
     - texlive-base
     - texlive-latex-extra
