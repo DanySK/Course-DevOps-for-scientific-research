@@ -2,6 +2,6 @@
 root_directory=$(pwd)
 for script in $(find . -type f -name build.sh); do
     cd "${script%/*}"
-    sh build.sh
+    sh build.sh || exit 1
     cd "$root_directory"
 done
