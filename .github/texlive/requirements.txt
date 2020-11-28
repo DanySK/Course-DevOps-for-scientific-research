@@ -1,0 +1,2 @@
+minted
+texlive-pictures
