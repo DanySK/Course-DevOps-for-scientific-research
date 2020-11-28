@@ -1,0 +1,7 @@
+#!/bin/sh
+root_directory=$(pwd)
+for script in $(find . -type f -name build.sh); do
+    cd "${script%/*}"
+    sh build.sh
+    cd "$root_directory"
+done
