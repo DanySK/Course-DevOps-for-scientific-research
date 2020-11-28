@@ -1,2 +1,2 @@
-minted
+texlive-latex-extra
 texlive-pictures
