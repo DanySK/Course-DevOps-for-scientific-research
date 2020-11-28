@@ -1,4 +1,4 @@
-name: Build and deploy
+name: Build LaTeX and deploy on GitHub Releases
 on:
   push:
   schedule:
