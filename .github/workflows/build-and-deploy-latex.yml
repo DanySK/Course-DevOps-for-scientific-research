@@ -23,6 +23,7 @@ jobs:
       - name: Compile LaTeX
         uses: DanySK/compile-latex-action@master
       - name: Deploy
+        if: ${{ startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/master' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
