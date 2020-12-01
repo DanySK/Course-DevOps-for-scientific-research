@@ -32,7 +32,7 @@ jobs:
           while IFS= read -r file; do
             pdf="${file%.*}.pdf"
             echo "Delivering file $pdf"
-            hub release edit -m '' -a "$pdf" "$TAG"
+            gh release upload "$TAG" "$pdf" --clobber
           done <"success-list"
   Automerge:
     needs: Build-LaTeX
